@@ -1,320 +1,1279 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Team Fintness — Portfolio Review</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-<style>
-:root{--ink:#1a2744;--paper:#f5f8fc;--cream:#e8eef6;--gold:#2563eb;--gold-l:#60a5fa;--green:#1a5c4a;--green-l:#2d8a6e;--coral:#e05c45;--sky:#3d7abf;--violet:#6b4fa0;--border:rgba(26,39,68,0.1);--blue:#2563eb;--blue-l:#3b82f6;--blue-d:#1e40af}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;overflow-x:hidden}
-header{background:#fff;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);box-shadow:0 1px 4px rgba(26,39,68,.06)}
-.logo{font-family:'DM Sans',sans-serif;font-size:1.1rem;color:var(--blue);font-weight:700;letter-spacing:-.01em}.logo span{color:var(--ink);font-weight:500}
-.badge-h{font-size:.68rem;background:rgba(37,99,235,.1);color:var(--blue);padding:3px 10px;border-radius:20px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Fintness — Portfolio Review</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --ink: #1a2744;
+      --paper: #f5f8fc;
+      --cream: #e8eef6;
+      --gold: #2563eb;
+      --gold-l: #60a5fa;
+      --green: #1a5c4a;
+      --green-l: #2d8a6e;
+      --coral: #e05c45;
+      --sky: #3d7abf;
+      --violet: #6b4fa0;
+      --border: rgba(26, 39, 68, 0.1);
+      --blue: #2563eb;
+      --blue-l: #3b82f6;
+      --blue-d: #1e40af
+    }
 
-/* UPLOAD PAGE */
-#upload-page{min-height:calc(100vh - 60px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;background:radial-gradient(ellipse at 60% 40%,rgba(37,99,235,.05) 0%,transparent 65%)}
-.eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);font-weight:600;margin-bottom:.8rem}
-.hero{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:900;text-align:center;line-height:1.1;margin-bottom:.7rem;max-width:640px}
-.hero em{color:var(--blue);font-style:normal}
-.sub{color:rgba(15,17,23,.5);font-size:.95rem;text-align:center;margin-bottom:2rem;max-width:440px;line-height:1.6}
-.drop{width:100%;max-width:520px;border:2px dashed var(--blue);border-radius:18px;padding:3rem 2rem;text-align:center;cursor:pointer;transition:.3s;background:rgba(37,99,235,.02)}
-.drop:hover,.drop.over{border-color:var(--blue-l);background:rgba(37,99,235,.05);transform:translateY(-2px);box-shadow:0 12px 50px rgba(26,39,68,.1)}
-.drop-icon{width:64px;height:64px;margin:0 auto 1rem;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center}
-.drop-icon svg{width:30px;height:30px}
-.drop-main{font-size:1rem;font-weight:600;margin-bottom:.3rem}
-.drop-hint{font-size:.82rem;color:rgba(15,17,23,.4)}
-.or{display:block;margin:.9rem 0;font-size:.75rem;color:rgba(15,17,23,.3);text-transform:uppercase;letter-spacing:.1em}
-.browse-btn{background:var(--blue);color:#fff;border:none;padding:.65rem 1.6rem;border-radius:8px;font:600 .88rem 'DM Sans',sans-serif;cursor:pointer;transition:.2s}
-.browse-btn:hover{background:var(--blue-d)}
-#file-in{display:none}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
 
-/* PROGRESS */
-.prog-wrap{width:100%;max-width:520px;margin-top:1.5rem;display:none}
-.prog-lbl{font-size:.78rem;color:rgba(15,17,23,.45);margin-bottom:.4rem;display:flex;justify-content:space-between}
-.prog-bar{height:4px;background:var(--cream);border-radius:4px;overflow:hidden}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue-l));border-radius:4px;transition:width .4s;width:0%}
-.steps{width:100%;max-width:520px;margin-top:1rem;display:none}
-.step{display:flex;align-items:center;gap:.6rem;padding:.3rem 0;font-size:.82rem;color:rgba(15,17,23,.35);transition:.3s}
-.step.active{color:var(--blue);font-weight:600}.step.done{color:rgba(15,17,23,.6)}
-.step-dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0;transition:.3s}
-.step.active .step-dot{background:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.2)}.step.done .step-dot{background:var(--blue-d)}
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden
+    }
 
-/* DASHBOARD */
-#dash-page{display:none}
-.dash-hdr{background:#fff;padding:1.6rem 2rem;color:var(--ink);border-bottom:1px solid var(--border)}
-.dash-top{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.8rem}
-.client-name{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700}
-.client-meta{font-size:.78rem;color:rgba(26,39,68,.5);margin-top:.25rem;font-family:'DM Mono',monospace}
-.dash-btns{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
-.btn-ol{background:transparent;border:1px solid var(--border);color:var(--ink);padding:.45rem 1rem;border-radius:7px;font:.78rem 'DM Sans',sans-serif;cursor:pointer;transition:.2s}
-.btn-ol:hover{border-color:var(--blue);color:var(--blue)}
-.btn-gold{background:var(--blue);border:none;color:#fff;padding:.45rem 1.1rem;border-radius:7px;font:700 .78rem 'DM Sans',sans-serif;cursor:pointer}
-.tabs{display:flex;margin-top:1.2rem;border-bottom:1px solid var(--border);overflow-x:auto}
-.tab{padding:.55rem 1.2rem;font-size:.82rem;font-weight:600;color:rgba(26,39,68,.4);cursor:pointer;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap;display:flex;align-items:center;gap:.35rem}
-.tab:hover{color:var(--ink)}.tab.on{color:var(--blue);border-bottom-color:var(--blue)}
-.av{width:20px;height:20px;border-radius:50%;background:rgba(26,39,68,.1);display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;color:var(--ink)}
-.tab.on .av{background:var(--blue);color:#fff}
+    header {
+      background: #fff;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 1px 4px rgba(26, 39, 68, .06)
+    }
 
-/* KPI */
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
-.kpi{background:var(--paper);padding:1.2rem 1.5rem;position:relative}
-.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.kpi.c0::before{background:var(--blue)}.kpi.c1::before{background:var(--blue-l)}.kpi.c2::before{background:var(--coral)}.kpi.c3::before{background:var(--sky)}.kpi.c4::before{background:var(--violet)}
-.kpi-lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(15,17,23,.4);font-weight:600;margin-bottom:.4rem}
-.kpi-val{font-family:'DM Sans',sans-serif;font-size:1.35rem;font-weight:500;line-height:1;margin-bottom:.25rem}
-.kpi-sub{font-size:.75rem;font-weight:600}
-.up{color:var(--green-l)}.dn{color:var(--coral)}.neu{color:var(--sky)}
+    .logo {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.1rem;
+      color: var(--blue);
+      font-weight: 700;
+      letter-spacing: -.01em
+    }
 
-/* GRID */
-.main-grid{display:grid;grid-template-columns:1fr 320px}
-@media(max-width:880px){.main-grid{grid-template-columns:1fr}}
-.lcol{padding:1.75rem 2rem;border-right:1px solid var(--border)}.rcol{padding:1.5rem;background:var(--cream)}
-.sec-ttl{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--blue);flex-shrink:0}
-.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem}
-@media(max-width:600px){.chart-row{grid-template-columns:1fr}}
-.cbox{background:#fff;border:1px solid var(--border);border-radius:12px;padding:1.1rem}
-.clbl{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#4a5568;margin-bottom:.9rem}
-.cwrap{position:relative;height:170px;display:flex;align-items:center;justify-content:center}
-.bar-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:1.1rem;margin-bottom:1.5rem}
+    .logo span {
+      color: var(--ink);
+      font-weight: 500
+    }
 
-/* TABLE */
-.tbl{width:100%;border-collapse:collapse;font-size:.82rem}
-.tbl thead th{text-align:left;padding:.65rem .7rem;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#fff;border-bottom:none;background:linear-gradient(135deg,#4b7bc4,#3261a8)}
-.tbl tbody td{padding:.7rem .7rem;border-bottom:1px solid rgba(15,17,23,.04);vertical-align:middle}
-.tbl tbody tr:hover{background:rgba(37,99,235,.04)}
-.fn{font-weight:600;font-size:.83rem}.fc{font-size:.68rem;color:rgba(15,17,23,.4);margin-top:1px}
-.cbadge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:.67rem;font-weight:600}
-.eq{background:rgba(26,92,74,.1);color:var(--green)}.dt{background:rgba(37,99,235,.1);color:var(--blue)}.hy{background:rgba(107,79,160,.1);color:var(--violet)}.lq{background:rgba(37,99,235,.08);color:var(--blue-d)}
-.rp{color:var(--green-l);font-weight:700}.rn{color:var(--coral);font-weight:700}
-.ab{display:flex;align-items:center;gap:.45rem}.abar{flex:1;height:5px;background:rgba(15,17,23,.06);border-radius:5px;overflow:hidden;min-width:50px}
-.afill{height:100%;border-radius:5px}
+    .badge-h {
+      font-size: .68rem;
+      background: rgba(37, 99, 235, .1);
+      color: var(--blue);
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-weight: 600
+    }
 
-/* SIDEBAR */
-.gauge-wrap{display:flex;align-items:flex-end;justify-content:center;height:120px}
-.risk-lbl{text-align:center;margin-top:.4rem}
-.risk-sc{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;line-height:1}
-.risk-desc{font-size:.7rem;color:rgba(15,17,23,.4);text-transform:uppercase;letter-spacing:.1em;font-weight:600;margin-top:.2rem}
-.divider{height:1px;background:var(--border);margin:1.2rem 0}
-.sip-row{display:flex;justify-content:space-between;align-items:center;padding:.6rem 0;border-bottom:1px solid var(--border);font-size:.82rem}
-.sip-row:last-child{border-bottom:none}
-.sip-nm{font-weight:500}.sip-dt{font-size:.68rem;color:rgba(15,17,23,.38)}
-.sip-amt{font-family:'DM Sans',sans-serif;font-weight:500;font-size:.82rem;color:var(--ink)}
-.goal{background:#fff;border:1px solid var(--border);border-radius:9px;padding:.9rem;margin-bottom:.65rem}
-.goal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.65rem}
-.goal-nm{font-weight:600;font-size:.85rem}.goal-pct{font-family:'DM Sans',sans-serif;font-size:.85rem;font-weight:600;color:var(--green)}
-.gbar{height:5px;background:rgba(15,17,23,.06);border-radius:5px;overflow:hidden;margin-bottom:.35rem}
-.gfill{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue-l));border-radius:5px}
-.gmeta{display:flex;justify-content:space-between;font-size:.7rem;color:rgba(15,17,23,.38);font-family:'DM Sans',sans-serif}
-.alert-box{display:flex;gap:.65rem;padding:.85rem 1rem;border-radius:10px;margin-bottom:.6rem;font-size:.8rem;line-height:1.5;border-left:4px solid transparent;position:relative;transition:transform .15s,box-shadow .15s;color:var(--ink)}
-.alert-box:hover{transform:translateX(3px);box-shadow:0 2px 12px rgba(0,0,0,.06)}
-.alert-box.warn{background:rgba(224,92,69,.06);border:1px solid rgba(224,92,69,.15);border-left:4px solid #e05c45;box-shadow:0 1px 6px rgba(224,92,69,.05)}
-.alert-box.info{background:rgba(37,99,235,.05);border:1px solid rgba(37,99,235,.15);border-left:4px solid #3b82f6;box-shadow:0 1px 6px rgba(37,99,235,.05)}
-.alert-box.ok{background:rgba(26,92,74,.05);border:1px solid rgba(26,92,74,.15);border-left:4px solid #2d8a6e;box-shadow:0 1px 6px rgba(26,92,74,.05)}
-.advisor-section-title{background:linear-gradient(135deg,rgba(37,99,235,.1),rgba(37,99,235,.03));border:1px solid rgba(37,99,235,.15);border-radius:10px;padding:.7rem .9rem;margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem}
-.advisor-section-title .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);animation:pulse-dot 2s ease-in-out infinite}
-@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.4)}50%{box-shadow:0 0 0 6px rgba(37,99,235,0)}}
-.alert-count{background:var(--blue);color:#fff;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:12px;margin-left:auto}
+    /* UPLOAD PAGE */
+    #upload-page {
+      min-height: calc(100vh - 60px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background: radial-gradient(ellipse at 60% 40%, rgba(37, 99, 235, .05) 0%, transparent 65%)
+    }
 
-/* ERROR */
+    .eyebrow {
+      font-size: .72rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--blue);
+      font-weight: 600;
+      margin-bottom: .8rem
+    }
 
-/* CONSOLIDATED OVERVIEW */
-.consol-wrap{margin-bottom:1.5rem}
-.consol-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:0}
-@media(max-width:700px){.consol-grid{grid-template-columns:1fr}}
-.consol-cat-amc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.2rem!important}
-@media(max-width:700px){.consol-cat-amc-grid{grid-template-columns:1fr}}
-.consol-box{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.consol-hdr{padding:.8rem 1.1rem;background:linear-gradient(135deg,#4b7bc4,#3261a8);border-bottom:none;font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#fff;display:flex;align-items:center;gap:.5rem;position:relative;overflow:hidden}
-.consol-hdr::after{content:'';position:absolute;top:0;right:0;width:80px;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.06));pointer-events:none}
-.ctbl{width:100%;border-collapse:collapse;font-size:.82rem}
-.ctbl thead th{text-align:left;padding:.55rem .85rem;font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#334155;border-bottom:2px solid rgba(37,99,235,.12);background:linear-gradient(135deg,rgba(37,99,235,.06),rgba(37,99,235,.02))}
-.ctbl tbody td{padding:.65rem .85rem;border-bottom:1px solid rgba(15,17,23,.04);vertical-align:middle}
-.ctbl tbody tr:last-child td{border-bottom:none}
-.ctbl tbody tr:hover{background:rgba(37,99,235,.04)}
-.ctbl tfoot td{padding:.65rem .85rem;font-weight:700;font-size:.82rem;background:rgba(15,17,23,.03);border-top:2px solid var(--border)}
-.ctbl .mono{font-family:'DM Sans',sans-serif;font-size:.78rem}
-.cat-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:.4rem;flex-shrink:0}
-.alloc-bar-wrap{display:flex;align-items:center;gap:.4rem}
-.alloc-bar{flex:1;height:4px;background:rgba(15,17,23,.06);border-radius:4px;overflow:hidden;min-width:40px}
-.alloc-fill{height:100%;border-radius:4px}
+    .hero {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 900;
+      text-align: center;
+      line-height: 1.1;
+      margin-bottom: .7rem;
+      max-width: 640px
+    }
 
-.err-box{width:100%;max-width:520px;margin-top:1.2rem;background:rgba(224,92,69,.07);border:1px solid rgba(224,92,69,.2);border-radius:12px;padding:1rem 1.2rem;font-size:.83rem;color:var(--coral);display:none;line-height:1.5}
+    .hero em {
+      color: var(--blue);
+      font-style: normal
+    }
 
-.fadein{animation:fi .4s ease forwards}
-@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.tag-wrap{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}
-.tag{display:inline-flex;align-items:center;gap:.35rem;background:rgba(224,92,69,.1);border:1px solid rgba(224,92,69,.2);color:var(--coral);padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:600}
-.tag-rm{background:none;border:none;cursor:pointer;color:var(--coral);font-size:.85rem;line-height:1;padding:0;margin-left:2px}
-.tag-rm:hover{color:#a03020}
-.unwanted-input-row{display:flex;gap:.4rem;margin-bottom:.5rem}
-.unwanted-input-row input{flex:1;padding:.55rem .75rem;border:1px solid var(--border);border-radius:8px;font:500 .82rem 'DM Sans',sans-serif;color:var(--ink);background:#fff;outline:none;transition:.2s}
-.unwanted-input-row input:focus{border-color:var(--coral)}
-.unwanted-input-row button{background:var(--coral);color:#fff;border:none;padding:.55rem .85rem;border-radius:8px;font:600 .78rem 'DM Sans',sans-serif;cursor:pointer;white-space:nowrap}
-.unwanted-input-row button:hover{background:#c04030}
-</style>
+    .sub {
+      color: rgba(15, 17, 23, .5);
+      font-size: .95rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      max-width: 440px;
+      line-height: 1.6
+    }
+
+    .drop {
+      width: 100%;
+      max-width: 520px;
+      border: 2px dashed var(--blue);
+      border-radius: 18px;
+      padding: 3rem 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: .3s;
+      background: rgba(37, 99, 235, .02)
+    }
+
+    .drop:hover,
+    .drop.over {
+      border-color: var(--blue-l);
+      background: rgba(37, 99, 235, .05);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 50px rgba(26, 39, 68, .1)
+    }
+
+    .drop-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+      background: var(--blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .drop-icon svg {
+      width: 30px;
+      height: 30px
+    }
+
+    .drop-main {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: .3rem
+    }
+
+    .drop-hint {
+      font-size: .82rem;
+      color: rgba(15, 17, 23, .4)
+    }
+
+    .or {
+      display: block;
+      margin: .9rem 0;
+      font-size: .75rem;
+      color: rgba(15, 17, 23, .3);
+      text-transform: uppercase;
+      letter-spacing: .1em
+    }
+
+    .browse-btn {
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      padding: .65rem 1.6rem;
+      border-radius: 8px;
+      font: 600 .88rem 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: .2s
+    }
+
+    .browse-btn:hover {
+      background: var(--blue-d)
+    }
+
+    #file-in {
+      display: none
+    }
+
+    /* PROGRESS */
+    .prog-wrap {
+      width: 100%;
+      max-width: 520px;
+      margin-top: 1.5rem;
+      display: none
+    }
+
+    .prog-lbl {
+      font-size: .78rem;
+      color: rgba(15, 17, 23, .45);
+      margin-bottom: .4rem;
+      display: flex;
+      justify-content: space-between
+    }
+
+    .prog-bar {
+      height: 4px;
+      background: var(--cream);
+      border-radius: 4px;
+      overflow: hidden
+    }
+
+    .prog-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--blue-l));
+      border-radius: 4px;
+      transition: width .4s;
+      width: 0%
+    }
+
+    .steps {
+      width: 100%;
+      max-width: 520px;
+      margin-top: 1rem;
+      display: none
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .3rem 0;
+      font-size: .82rem;
+      color: rgba(15, 17, 23, .35);
+      transition: .3s
+    }
+
+    .step.active {
+      color: var(--blue);
+      font-weight: 600
+    }
+
+    .step.done {
+      color: rgba(15, 17, 23, .6)
+    }
+
+    .step-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      flex-shrink: 0;
+      transition: .3s
+    }
+
+    .step.active .step-dot {
+      background: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, .2)
+    }
+
+    .step.done .step-dot {
+      background: var(--blue-d)
+    }
+
+    /* DASHBOARD */
+    #dash-page {
+      display: none
+    }
+
+    .dash-hdr {
+      background: #fff;
+      padding: 1.6rem 2rem;
+      color: var(--ink);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .dash-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: .8rem
+    }
+
+    .client-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      font-weight: 700
+    }
+
+    .client-meta {
+      font-size: .78rem;
+      color: rgba(26, 39, 68, .5);
+      margin-top: .25rem;
+      font-family: 'DM Mono', monospace
+    }
+
+    .dash-btns {
+      display: flex;
+      gap: .6rem;
+      align-items: center;
+      flex-wrap: wrap
+    }
+
+    .btn-ol {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--ink);
+      padding: .45rem 1rem;
+      border-radius: 7px;
+      font: .78rem 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: .2s
+    }
+
+    .btn-ol:hover {
+      border-color: var(--blue);
+      color: var(--blue)
+    }
+
+    .btn-gold {
+      background: var(--blue);
+      border: none;
+      color: #fff;
+      padding: .45rem 1.1rem;
+      border-radius: 7px;
+      font: 700 .78rem 'DM Sans', sans-serif;
+      cursor: pointer
+    }
+
+    .tabs {
+      display: flex;
+      margin-top: 1.2rem;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto
+    }
+
+    .tab {
+      padding: .55rem 1.2rem;
+      font-size: .82rem;
+      font-weight: 600;
+      color: rgba(26, 39, 68, .4);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: .2s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: .35rem
+    }
+
+    .tab:hover {
+      color: var(--ink)
+    }
+
+    .tab.on {
+      color: var(--blue);
+      border-bottom-color: var(--blue)
+    }
+
+    .av {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(26, 39, 68, .1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .62rem;
+      font-weight: 700;
+      color: var(--ink)
+    }
+
+    .tab.on .av {
+      background: var(--blue);
+      color: #fff
+    }
+
+    /* KPI */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border-bottom: 1px solid var(--border)
+    }
+
+    .kpi {
+      background: var(--paper);
+      padding: 1.2rem 1.5rem;
+      position: relative
+    }
+
+    .kpi::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px
+    }
+
+    .kpi.c0::before {
+      background: var(--blue)
+    }
+
+    .kpi.c1::before {
+      background: var(--blue-l)
+    }
+
+    .kpi.c2::before {
+      background: var(--coral)
+    }
+
+    .kpi.c3::before {
+      background: var(--sky)
+    }
+
+    .kpi.c4::before {
+      background: var(--violet)
+    }
+
+    .kpi-lbl {
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: rgba(15, 17, 23, .4);
+      font-weight: 600;
+      margin-bottom: .4rem
+    }
+
+    .kpi-val {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 500;
+      line-height: 1;
+      margin-bottom: .25rem
+    }
+
+    .kpi-sub {
+      font-size: .75rem;
+      font-weight: 600
+    }
+
+    .up {
+      color: var(--green-l)
+    }
+
+    .dn {
+      color: var(--coral)
+    }
+
+    .neu {
+      color: var(--sky)
+    }
+
+    /* GRID */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px
+    }
+
+    @media(max-width:880px) {
+      .main-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .lcol {
+      padding: 1.75rem 2rem;
+      border-right: 1px solid var(--border)
+    }
+
+    .rcol {
+      padding: 1.5rem;
+      background: var(--cream)
+    }
+
+    .sec-ttl {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--blue);
+      flex-shrink: 0
+    }
+
+    .chart-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin-bottom: 1.5rem
+    }
+
+    @media(max-width:600px) {
+      .chart-row {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .cbox {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem
+    }
+
+    .clbl {
+      font-size: .72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: rgba(15, 17, 23, .4);
+      margin-bottom: .9rem
+    }
+
+    .cwrap {
+      position: relative;
+      height: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .bar-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem;
+      margin-bottom: 1.5rem
+    }
+
+    /* TABLE */
+    .tbl {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .82rem
+    }
+
+    .tbl thead th {
+      text-align: left;
+      padding: .65rem .7rem;
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: #fff;
+      border-bottom: none;
+      background: linear-gradient(135deg, #1e3a5f, #1e40af)
+    }
+
+    .tbl tbody td {
+      padding: .7rem .7rem;
+      border-bottom: 1px solid rgba(56, 64, 89, 0.04);
+      vertical-align: middle
+    }
+
+    .tbl tbody tr:hover {
+      background: rgba(37, 99, 235, .04)
+    }
+
+    .fn {
+      font-weight: 600;
+      font-size: .83rem
+    }
+
+    .fc {
+      font-size: .68rem;
+      color: rgba(63, 72, 98, 0.4);
+      margin-top: 1px
+    }
+
+    .cbadge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 20px;
+      font-size: .67rem;
+      font-weight: 600
+    }
+
+    .eq {
+      background: rgba(26, 92, 74, .1);
+      color: var(--green)
+    }
+
+    .dt {
+      background: rgba(57, 118, 250, 0.1);
+      color: var(--blue)
+    }
+
+    .hy {
+      background: rgba(107, 79, 160, .1);
+      color: var(--violet)
+    }
+
+    .lq {
+      background: rgba(37, 99, 235, .08);
+      color: var(--blue-d)
+    }
+
+    .rp {
+      color: var(--green-l);
+      font-weight: 700
+    }
+
+    .rn {
+      color: var(--coral);
+      font-weight: 700
+    }
+
+    .ab {
+      display: flex;
+      align-items: center;
+      gap: .45rem
+    }
+
+    .abar {
+      flex: 1;
+      height: 5px;
+      background: rgba(79, 89, 120, 0.06);
+      border-radius: 5px;
+      overflow: hidden;
+      min-width: 50px
+    }
+
+    .afill {
+      height: 100%;
+      border-radius: 5px
+    }
+
+    /* SIDEBAR */
+    .gauge-wrap {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      height: 120px
+    }
+
+    .risk-lbl {
+      text-align: center;
+      margin-top: .4rem
+    }
+
+    .risk-sc {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      line-height: 1
+    }
+
+    .risk-desc {
+      font-size: .7rem;
+      color: rgba(15, 17, 23, .4);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      font-weight: 600;
+      margin-top: .2rem
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 1.2rem 0
+    }
+
+    .sip-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: .6rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: .82rem
+    }
+
+    .sip-row:last-child {
+      border-bottom: none
+    }
+
+    .sip-nm {
+      font-weight: 500
+    }
+
+    .sip-dt {
+      font-size: .68rem;
+      color: rgba(15, 17, 23, .38)
+    }
+
+    .sip-amt {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: .82rem;
+      color: var(--ink)
+    }
+
+    .goal {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: .9rem;
+      margin-bottom: .65rem
+    }
+
+    .goal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: .65rem
+    }
+
+    .goal-nm {
+      font-weight: 600;
+      font-size: .85rem
+    }
+
+    .goal-pct {
+      font-family: 'DM Sans', sans-serif;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--green)
+    }
+
+    .gbar {
+      height: 5px;
+      background: rgba(15, 17, 23, .06);
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: .35rem
+    }
+
+    .gfill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--blue-l));
+      border-radius: 5px
+    }
+
+    .gmeta {
+      display: flex;
+      justify-content: space-between;
+      font-size: .7rem;
+      color: rgba(15, 17, 23, .38);
+      font-family: 'DM Sans', sans-serif
+    }
+
+    .alert-box {
+      display: flex;
+      gap: .65rem;
+      padding: .85rem 1rem;
+      border-radius: 10px;
+      margin-bottom: .6rem;
+      font-size: .8rem;
+      line-height: 1.5;
+      border-left: 4px solid transparent;
+      position: relative;
+      transition: transform .15s, box-shadow .15s
+    }
+
+    .alert-box:hover {
+      transform: translateX(3px);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .06)
+    }
+
+    .alert-box.warn {
+      background: rgba(224, 92, 69, .08);
+      border: 1px solid rgba(224, 92, 69, .18);
+      border-left: 4px solid #e05c45;
+      box-shadow: 0 1px 6px rgba(224, 92, 69, .08)
+    }
+
+    .alert-box.info {
+      background: rgba(37, 99, 235, .07);
+      border: 1px solid rgba(37, 99, 235, .18);
+      border-left: 4px solid #3b82f6;
+      box-shadow: 0 1px 6px rgba(37, 99, 235, .08)
+    }
+
+    .alert-box.ok {
+      background: rgba(26, 92, 74, .08);
+      border: 1px solid rgba(26, 92, 74, .18);
+      border-left: 4px solid #2d8a6e;
+      box-shadow: 0 1px 6px rgba(26, 92, 74, .08)
+    }
+
+    .advisor-section-title {
+      background: linear-gradient(135deg, rgba(37, 99, 235, .1), rgba(37, 99, 235, .03));
+      border: 1px solid rgba(37, 99, 235, .15);
+      border-radius: 10px;
+      padding: .7rem .9rem;
+      margin-bottom: .8rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem
+    }
+
+    .advisor-section-title .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--blue);
+      animation: pulse-dot 2s ease-in-out infinite
+    }
+
+    @keyframes pulse-dot {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(37, 99, 235, .4)
+      }
+
+      50% {
+        box-shadow: 0 0 0 6px rgba(37, 99, 235, 0)
+      }
+    }
+
+    .alert-count {
+      background: var(--blue);
+      color: #fff;
+      font-size: .65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 12px;
+      margin-left: auto
+    }
+
+    /* ERROR */
+
+    /* CONSOLIDATED OVERVIEW */
+    .consol-wrap {
+      margin-bottom: 1.5rem
+    }
+
+    .consol-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin-bottom: 0
+    }
+
+    @media(max-width:700px) {
+      .consol-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .consol-cat-amc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin-top: 1.2rem !important
+    }
+
+    @media(max-width:700px) {
+      .consol-cat-amc-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .consol-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden
+    }
+
+    .consol-hdr {
+      padding: .8rem 1.1rem;
+      background: linear-gradient(135deg, #1e3a5f, #1e40af);
+      border-bottom: none;
+      font-size: .76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      position: relative;
+      overflow: hidden
+    }
+
+    .consol-hdr::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 80px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .06));
+      pointer-events: none
+    }
+
+    .ctbl {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .82rem
+    }
+
+    .ctbl thead th {
+      text-align: left;
+      padding: .55rem .85rem;
+      font-size: .67rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: rgba(26, 39, 68, .55);
+      border-bottom: 2px solid rgba(37, 99, 235, .12);
+      background: linear-gradient(135deg, rgba(37, 99, 235, .06), rgba(37, 99, 235, .02))
+    }
+
+    .ctbl tbody td {
+      padding: .65rem .85rem;
+      border-bottom: 1px solid rgba(15, 17, 23, .04);
+      vertical-align: middle
+    }
+
+    .ctbl tbody tr:last-child td {
+      border-bottom: none
+    }
+
+    .ctbl tbody tr:hover {
+      background: rgba(37, 99, 235, .04)
+    }
+
+    .ctbl tfoot td {
+      padding: .65rem .85rem;
+      font-weight: 700;
+      font-size: .82rem;
+      background: rgba(15, 17, 23, .03);
+      border-top: 2px solid var(--border)
+    }
+
+    .ctbl .mono {
+      font-family: 'DM Sans', sans-serif;
+      font-size: .78rem
+    }
+
+    .cat-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: .4rem;
+      flex-shrink: 0
+    }
+
+    .alloc-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: .4rem
+    }
+
+    .alloc-bar {
+      flex: 1;
+      height: 4px;
+      background: rgba(15, 17, 23, .06);
+      border-radius: 4px;
+      overflow: hidden;
+      min-width: 40px
+    }
+
+    .alloc-fill {
+      height: 100%;
+      border-radius: 4px
+    }
+
+    .err-box {
+      width: 100%;
+      max-width: 520px;
+      margin-top: 1.2rem;
+      background: rgba(224, 92, 69, .07);
+      border: 1px solid rgba(224, 92, 69, .2);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      font-size: .83rem;
+      color: var(--coral);
+      display: none;
+      line-height: 1.5
+    }
+
+    .fadein {
+      animation: fi .4s ease forwards
+    }
+
+    @keyframes fi {
+      from {
+        opacity: 0;
+        transform: translateY(8px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    .tag-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      margin-top: .5rem
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      background: rgba(224, 92, 69, .1);
+      border: 1px solid rgba(224, 92, 69, .2);
+      color: var(--coral);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: .72rem;
+      font-weight: 600
+    }
+
+    .tag-rm {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--coral);
+      font-size: .85rem;
+      line-height: 1;
+      padding: 0;
+      margin-left: 2px
+    }
+
+    .tag-rm:hover {
+      color: #a03020
+    }
+
+    .unwanted-input-row {
+      display: flex;
+      gap: .4rem;
+      margin-bottom: .5rem
+    }
+
+    .unwanted-input-row input {
+      flex: 1;
+      padding: .55rem .75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font: 500 .82rem 'DM Sans', sans-serif;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+      transition: .2s
+    }
+
+    .unwanted-input-row input:focus {
+      border-color: var(--coral)
+    }
+
+    .unwanted-input-row button {
+      background: var(--coral);
+      color: #fff;
+      border: none;
+      padding: .55rem .85rem;
+      border-radius: 8px;
+      font: 600 .78rem 'DM Sans', sans-serif;
+      cursor: pointer;
+      white-space: nowrap
+    }
+
+    .unwanted-input-row button:hover {
+      background: #c04030
+    }
+  </style>
 </head>
+
 <body>
 
-<header>
-  <div class="logo">Team Fintness <span>Portfolio Review</span></div>
-  <div class="badge-h">MFD Dashboard</div>
-</header>
+  <header>
+    <div class="logo">Team Fintness <span>Portfolio Review</span></div>
+    <div class="badge-h">MFD Dashboard</div>
+  </header>
 
-<!-- UPLOAD PAGE -->
-<section id="upload-page">
-  <div class="eyebrow">Team Fintness · Portfolio Review</div>
-  <h1 class="hero">Smart Portfolio <em>Review</em> &amp; Analysis</h1>
-  <p class="sub">Upload any client portfolio PDF — CAMS, KFintech, Groww, Zerodha or any broker statement. AI reads it instantly.</p>
+  <!-- UPLOAD PAGE -->
+  <section id="upload-page">
+    <div class="eyebrow">Team Fintness · Portfolio Review</div>
+    <h1 class="hero">Smart Portfolio <em>Review</em> &amp; Analysis</h1>
+    <p class="sub">Upload any client portfolio PDF — CAMS, KFintech, Groww, Zerodha or any broker statement. AI reads it
+      instantly.</p>
 
-  <div class="drop" id="drop-zone">
-    <div class="drop-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round">
-        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
-        <polyline points="14,2 14,8 20,8"/>
-        <line x1="12" y1="18" x2="12" y2="12"/>
-        <polyline points="9,15 12,12 15,15"/>
-      </svg>
-    </div>
-    <div class="drop-main">Drop your client portfolio PDF here</div>
-    <div class="drop-hint">CAMS · KFintech · MFU · Zerodha · Groww · Any broker statement</div>
-    <span class="or">or</span><br>
-    <button class="browse-btn">Browse File</button>
-    <input type="file" id="file-in" accept=".pdf,application/pdf">
-  </div>
-
-  <div class="prog-wrap" id="pw">
-    <div class="prog-lbl"><span id="prog-step">Starting…</span><span id="prog-pct">0%</span></div>
-    <div class="prog-bar"><div class="prog-fill" id="pf"></div></div>
-  </div>
-
-  <div class="steps" id="steps-el">
-    <div class="step" id="s1"><span class="step-dot"></span>Reading PDF file</div>
-    <div class="step" id="s2"><span class="step-dot"></span>Sending to AI for analysis</div>
-    <div class="step" id="s3"><span class="step-dot"></span>Extracting holdings, values &amp; SIP data</div>
-    <div class="step" id="s4"><span class="step-dot"></span>Building portfolio dashboard</div>
-  </div>
-
-  <div class="err-box" id="err-box"></div>
-</section>
-
-<!-- DASHBOARD PAGE -->
-<div id="dash-page">
-  <div class="dash-hdr">
-    <div class="dash-top">
-      <div>
-        <div class="client-name" id="p-title">—</div>
-        <div class="client-meta" id="p-meta">—</div>
+    <div class="drop" id="drop-zone">
+      <div class="drop-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+          <polyline points="14,2 14,8 20,8" />
+          <line x1="12" y1="18" x2="12" y2="12" />
+          <polyline points="9,15 12,12 15,15" />
+        </svg>
       </div>
-      <div class="dash-btns">
-        <button class="btn-ol" id="btn-new">↑ New Client</button>
-        <button class="btn-gold" onclick="window.print()">⬇ Export</button>
+      <div class="drop-main">Drop your client portfolio PDF here</div>
+      <div class="drop-hint">CAMS · KFintech · MFU · Zerodha · Groww · Any broker statement</div>
+      <span class="or">or</span><br>
+      <button class="browse-btn">Browse File</button>
+      <input type="file" id="file-in" accept=".pdf,application/pdf">
+    </div>
+
+    <div class="prog-wrap" id="pw">
+      <div class="prog-lbl"><span id="prog-step">Starting…</span><span id="prog-pct">0%</span></div>
+      <div class="prog-bar">
+        <div class="prog-fill" id="pf"></div>
       </div>
     </div>
-    <div class="tabs" id="tabs-el"></div>
-  </div>
-  <div class="kpi-row" id="kpi-row"></div>
-  <div class="main-grid">
-    <div class="lcol">
-      <div class="sec-ttl"><span class="dot"></span>Portfolio Allocation</div>
-      <div class="chart-row">
-        <div class="cbox"><div class="clbl">Asset Class Mix</div><div class="cwrap"><canvas id="ca"></canvas></div></div>
-        <div class="cbox"><div class="clbl">Category Breakdown</div><div class="cwrap"><canvas id="cc"></canvas></div></div>
+
+    <div class="steps" id="steps-el">
+      <div class="step" id="s1"><span class="step-dot"></span>Reading PDF file</div>
+      <div class="step" id="s2"><span class="step-dot"></span>Sending to AI for analysis</div>
+      <div class="step" id="s3"><span class="step-dot"></span>Extracting holdings, values &amp; SIP data</div>
+      <div class="step" id="s4"><span class="step-dot"></span>Building portfolio dashboard</div>
+    </div>
+
+    <div class="err-box" id="err-box"></div>
+  </section>
+
+  <!-- DASHBOARD PAGE -->
+  <div id="dash-page">
+    <div class="dash-hdr">
+      <div class="dash-top">
+        <div>
+          <div class="client-name" id="p-title">—</div>
+          <div class="client-meta" id="p-meta">—</div>
+        </div>
+        <div class="dash-btns">
+          <button class="btn-ol" id="btn-new">↑ New Client</button>
+          <button class="btn-gold" onclick="window.print()">⬇ Export</button>
+        </div>
       </div>
-      <div class="bar-box">
-        <div class="clbl">Top Schemes — Invested vs Current Value</div>
-        <div style="height:220px;position:relative"><canvas id="cb"></canvas></div>
+      <div class="tabs" id="tabs-el"></div>
+    </div>
+    <div class="kpi-row" id="kpi-row"></div>
+    <div class="main-grid">
+      <div class="lcol">
+        <div class="sec-ttl"><span class="dot"></span>Portfolio Allocation</div>
+        <div class="chart-row">
+          <div class="cbox">
+            <div class="clbl">Asset Class Mix</div>
+            <div class="cwrap"><canvas id="ca"></canvas></div>
+          </div>
+          <div class="cbox">
+            <div class="clbl">Category Breakdown</div>
+            <div class="cwrap"><canvas id="cc"></canvas></div>
+          </div>
+        </div>
+        <div class="bar-box">
+          <div class="clbl">Top Schemes — Invested vs Current Value</div>
+          <div style="height:220px;position:relative"><canvas id="cb"></canvas></div>
+        </div>
+        <div id="consol-overview" style="display:none;margin-bottom:1.5rem"></div>
+        <div class="sec-ttl" style="margin-bottom:.8rem"><span class="dot"></span>All Holdings</div>
+        <div style="overflow-x:auto;border:1px solid var(--border);border-radius:12px;overflow:hidden">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Fund Name</th>
+                <th>Category</th>
+                <th>Invested</th>
+                <th>Current</th>
+                <th>Gain/Loss</th>
+                <th>Allocation</th>
+                <th>CAGR</th>
+              </tr>
+            </thead>
+            <tbody id="t-body"></tbody>
+          </table>
+        </div>
       </div>
-      <div id="consol-overview" style="display:none;margin-bottom:1.5rem"></div>
-      <div class="sec-ttl" style="margin-bottom:.8rem"><span class="dot"></span>All Holdings</div>
-      <div style="overflow-x:auto;border:1px solid var(--border);border-radius:12px;overflow:hidden">
-        <table class="tbl">
-          <thead><tr><th>Fund Name</th><th>Category</th><th>Invested</th><th>Current</th><th>Gain/Loss</th><th>Allocation</th><th>CAGR</th></tr></thead>
-          <tbody id="t-body"></tbody>
-        </table>
+      <div class="rcol">
+        <div class="sec-ttl" style="font-size:.88rem"><span class="dot"></span>Risk Score</div>
+        <div class="gauge-wrap"><canvas id="gauge" width="220" height="120"></canvas></div>
+        <div class="risk-lbl">
+          <div class="risk-sc" id="rs-val">—</div>
+          <div class="risk-desc" id="rs-lbl">—</div>
+        </div>
+        <div class="divider"></div>
+        <div class="sec-ttl" style="font-size:.88rem"><span class="dot"></span>Active SIPs</div>
+        <div id="sip-list"></div>
+        <div class="divider"></div>
+        <div class="sec-ttl" style="font-size:.88rem"><span class="dot"></span>Scheme Search</div>
+        <div style="margin-bottom:.8rem">
+          <input id="scheme-search" type="text" placeholder="Search scheme name..."
+            style="width:100%;padding:.6rem .85rem;border:1px solid var(--border);border-radius:8px;font:500 .82rem 'DM Sans',sans-serif;color:var(--ink);background:#fff;outline:none;transition:.2s"
+            onfocus="this.style.borderColor='var(--green-l)'" onblur="this.style.borderColor='var(--border)'"
+            oninput="searchScheme(this.value)">
+        </div>
+        <div id="search-results" style="font-size:.8rem;color:rgba(15,17,23,.4)">Type to search schemes in this
+          portfolio</div>
+        <div class="divider"></div>
+        <div class="sec-ttl" style="font-size:.88rem"><span class="dot"></span>Schemes We Don't Want</div>
+        <div class="unwanted-input-row">
+          <input id="unwanted-input" type="text" placeholder="Enter fund name & press Add..."
+            onkeydown="if(event.key==='Enter') addUnwanted()">
+          <button onclick="addUnwanted()">+ Add</button>
+        </div>
+        <div class="tag-wrap" id="unwanted-tags"></div>
+        <div style="font-size:.74rem;color:rgba(15,17,23,.35);margin-top:.5rem">Added funds will appear as warnings in
+          Advisor Notes if found in portfolio</div>
+        <div class="divider"></div>
+        <div class="advisor-section-title" style="font-size:.88rem"><span class="dot"></span><span
+            style="font-family:'Playfair Display',serif;font-weight:700">Advisor Notes</span><span class="alert-count"
+            id="alert-count" style="display:none">0</span></div>
+        <div id="alert-list"></div>
       </div>
     </div>
-    <div class="rcol">
-      <div class="sec-ttl" style="font-size:.88rem"><span class="dot"></span>Risk Score</div>
-      <div class="gauge-wrap"><canvas id="gauge" width="220" height="120"></canvas></div>
-      <div class="risk-lbl"><div class="risk-sc" id="rs-val">—</div><div class="risk-desc" id="rs-lbl">—</div></div>
-      <div class="divider"></div>
-      <div class="sec-ttl" style="font-size:.88rem"><span class="dot"></span>Active SIPs</div>
-      <div id="sip-list"></div>
-      <div class="divider"></div>
-      <div class="sec-ttl" style="font-size:.88rem"><span class="dot"></span>Scheme Search</div>
-      <div style="margin-bottom:.8rem">
-        <input id="scheme-search" type="text" placeholder="Search scheme name..." style="width:100%;padding:.6rem .85rem;border:1px solid var(--border);border-radius:8px;font:500 .82rem 'DM Sans',sans-serif;color:var(--ink);background:#fff;outline:none;transition:.2s" onfocus="this.style.borderColor='var(--green-l)'" onblur="this.style.borderColor='var(--border)'" oninput="searchScheme(this.value)">
-      </div>
-      <div id="search-results" style="font-size:.8rem;color:#4a5568">Type to search schemes in this portfolio</div>
-      <div class="divider"></div>
-      <div class="sec-ttl" style="font-size:.88rem"><span class="dot"></span>Schemes We Don't Want</div>
-      <div class="unwanted-input-row">
-        <input id="unwanted-input" type="text" placeholder="Enter fund name & press Add..." onkeydown="if(event.key==='Enter') addUnwanted()">
-        <button onclick="addUnwanted()">+ Add</button>
-      </div>
-      <div class="tag-wrap" id="unwanted-tags"></div>
-      <div style="font-size:.74rem;color:#4a5568;margin-top:.5rem">Added funds will appear as warnings in Advisor Notes if found in portfolio</div>
-      <div class="divider"></div>
-      <div class="advisor-section-title" style="font-size:.88rem"><span class="dot"></span><span style="font-family:'Playfair Display',serif;font-weight:700">Advisor Notes</span><span class="alert-count" id="alert-count" style="display:none">0</span></div>
-      <div id="alert-list"></div>
-    </div>
   </div>
-</div>
 
-<script>
-const qs = id => document.getElementById(id);
-const charts = {};
+  <script>
+    const qs = id => document.getElementById(id);
+    const charts = {};
 
-function fmt(n) {
-  if (n === undefined || n === null || isNaN(n)) return '₹0';
-  n = Number(n);
-  const neg = n < 0; if (neg) n = -n;
-  let s;
-  if (n >= 1e7) s = '₹' + (n/1e7).toFixed(2) + ' Cr';
-  else if (n >= 1e5) s = '₹' + (n/1e5).toFixed(2) + 'L';
-  else s = '₹' + n.toLocaleString('en-IN');
-  return neg ? '-' + s : s;
-}
+    function fmt(n) {
+      if (n === undefined || n === null || isNaN(n)) return '₹0';
+      n = Number(n);
+      const neg = n < 0; if (neg) n = -n;
+      let s;
+      if (n >= 1e7) s = '₹' + (n / 1e7).toFixed(2) + ' Cr';
+      else if (n >= 1e5) s = '₹' + (n / 1e5).toFixed(2) + 'L';
+      else s = '₹' + n.toLocaleString('en-IN');
+      return neg ? '-' + s : s;
+    }
 
-function setStep(n) {
-  for (let i = 1; i <= 4; i++) {
-    const el = qs('s' + i); if (!el) continue;
-    el.className = 'step' + (i < n ? ' done' : i === n ? ' active' : '');
-  }
-}
+    function setStep(n) {
+      for (let i = 1; i <= 4; i++) {
+        const el = qs('s' + i); if (!el) continue;
+        el.className = 'step' + (i < n ? ' done' : i === n ? ' active' : '');
+      }
+    }
 
-function setProg(pct, label) {
-  qs('pf').style.width = pct + '%';
-  qs('prog-pct').textContent = Math.round(pct) + '%';
-  if (label) qs('prog-step').textContent = label;
-}
+    function setProg(pct, label) {
+      qs('pf').style.width = pct + '%';
+      qs('prog-pct').textContent = Math.round(pct) + '%';
+      if (label) qs('prog-step').textContent = label;
+    }
 
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-function showErr(msg) {
-  const e = qs('err-box');
-  e.textContent = '⚠️ ' + msg;
-  e.style.display = 'block';
-}
+    function showErr(msg) {
+      const e = qs('err-box');
+      e.textContent = '⚠️ ' + msg;
+      e.style.display = 'block';
+    }
 
-function hideErr() { qs('err-box').style.display = 'none'; }
+    function hideErr() { qs('err-box').style.display = 'none'; }
 
-// FILE → BASE64
-function toBase64(file) {
-  return new Promise((resolve, reject) => {
-    const r = new FileReader();
-    r.onload = () => resolve(r.result.substring(r.result.indexOf(',') + 1));
-    r.onerror = () => reject(new Error('Could not read file'));
-    r.readAsDataURL(file);
-  });
-}
+    // FILE → BASE64
+    function toBase64(file) {
+      return new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(r.result.substring(r.result.indexOf(',') + 1));
+        r.onerror = () => reject(new Error('Could not read file'));
+        r.readAsDataURL(file);
+      });
+    }
 
-// GEMINI SYSTEM PROMPT
-const SYSTEM_PROMPT = `You are an expert Indian mutual fund portfolio analyst for an MFD (Mutual Fund Distributor).
+    // GEMINI SYSTEM PROMPT
+    const SYSTEM_PROMPT = `You are an expert Indian mutual fund portfolio analyst for an MFD (Mutual Fund Distributor).
 Read the portfolio PDF and return ONLY a single valid JSON object. No markdown, no code fences, no explanation.
 
 EXTRACTION RULES — FOLLOW EXACTLY:
@@ -453,459 +1412,461 @@ Return this exact JSON structure:
   ]
 }`;
 
-// GEMINI API CALL (client-side — avoids Vercel serverless timeout)
-async function callGeminiAPI(b64, filename) {
-  // Step 1: Get API key from lightweight endpoint (instant)
-  const keyResp = await fetch('/api/get-key');
-  if (!keyResp.ok) {
-    const keyErr = await keyResp.text();
-    throw new Error('Failed to get API key: ' + keyErr.substring(0, 200));
-  }
-  const { key } = await keyResp.json();
-
-  // Step 2: Call Gemini directly from browser (no timeout constraint)
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-      contents: [{
-        role: 'user',
-        parts: [
-          { inlineData: { mimeType: 'application/pdf', data: b64 } },
-          { text: `Filename: "${filename}". Extract all data from this portfolio statement and return the JSON.` }
-        ]
-      }],
-      generationConfig: {
-        temperature: 0.1,
-        responseMimeType: "application/json"
+    // GEMINI API CALL (client-side — avoids Vercel serverless timeout)
+    async function callGeminiAPI(b64, filename) {
+      // Step 1: Get API key from lightweight endpoint (instant)
+      const keyResp = await fetch('/api/get-key');
+      if (!keyResp.ok) {
+        const keyErr = await keyResp.text();
+        throw new Error('Failed to get API key: ' + keyErr.substring(0, 200));
       }
-    })
-  });
+      const { key } = await keyResp.json();
 
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.error?.message || 'Gemini API error: ' + response.status);
-  }
+      // Step 2: Call Gemini directly from browser (no timeout constraint)
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          contents: [{
+            role: 'user',
+            parts: [
+              { inlineData: { mimeType: 'application/pdf', data: b64 } },
+              { text: `Filename: "${filename}". Extract all data from this portfolio statement and return the JSON.` }
+            ]
+          }],
+          generationConfig: {
+            temperature: 0.1,
+            responseMimeType: "application/json"
+          }
+        })
+      });
 
-  const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-  const clean = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
-  return JSON.parse(clean);
-}
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error?.message || 'Gemini API error: ' + response.status);
+      }
 
-// MAIN HANDLER
-let currentData = null;
+      const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+      const clean = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
+      return JSON.parse(clean);
+    }
 
-async function handleFile(file) {
-  if (!file) return;
-  hideErr();
-  qs('pw').style.display = 'block';
-  qs('steps-el').style.display = 'block';
-  setProg(0, 'Starting…'); setStep(1);
+    // MAIN HANDLER
+    let currentData = null;
 
-  let pct = 0;
-  const ticker = setInterval(() => { if (pct < 78) { pct += 0.5; setProg(Math.min(pct, 78)); } }, 150);
+    async function handleFile(file) {
+      if (!file) return;
+      hideErr();
+      qs('pw').style.display = 'block';
+      qs('steps-el').style.display = 'block';
+      setProg(0, 'Starting…'); setStep(1);
 
-  try {
-    setStep(1); setProg(5, 'Reading PDF…');
-    const b64 = await toBase64(file);
-    setProg(20, 'File loaded ✓');
+      let pct = 0;
+      const ticker = setInterval(() => { if (pct < 78) { pct += 0.5; setProg(Math.min(pct, 78)); } }, 150);
 
-    setStep(2); setProg(25, 'Sending to AI for analysis…');
-    const portfolio = await callGeminiAPI(b64, file.name);
-    setProg(82, 'AI analysis complete ✓');
+      try {
+        setStep(1); setProg(5, 'Reading PDF…');
+        const b64 = await toBase64(file);
+        setProg(20, 'File loaded ✓');
 
-    setStep(3); setProg(88, 'Processing holdings & SIP data…');
-    if (!portfolio?.members?.length) throw new Error('No data returned from AI. Please try again.');
-    await sleep(400);
+        setStep(2); setProg(25, 'Sending to AI for analysis…');
+        const portfolio = await callGeminiAPI(b64, file.name);
+        setProg(82, 'AI analysis complete ✓');
 
-    setStep(4); setProg(96, 'Building dashboard…');
-    clearInterval(ticker);
-    setProg(100, 'Complete!');
-    await sleep(500);
+        setStep(3); setProg(88, 'Processing holdings & SIP data…');
+        if (!portfolio?.members?.length) throw new Error('No data returned from AI. Please try again.');
+        await sleep(400);
 
-    qs('pw').style.display = 'none';
-    qs('steps-el').style.display = 'none';
-    buildDashboard(portfolio);
+        setStep(4); setProg(96, 'Building dashboard…');
+        clearInterval(ticker);
+        setProg(100, 'Complete!');
+        await sleep(500);
 
-  } catch (err) {
-    clearInterval(ticker);
-    console.error(err);
-    qs('pw').style.display = 'none';
-    qs('steps-el').style.display = 'none';
-    showErr(err.message || 'Something went wrong. Please try uploading again.');
-    setProg(0, '');
-  }
-}
+        qs('pw').style.display = 'none';
+        qs('steps-el').style.display = 'none';
+        buildDashboard(portfolio);
 
-// DASHBOARD BUILD
-function buildDashboard(data) {
-  currentData = data;
-  qs('p-title').textContent = data.title || 'Portfolio Dashboard';
-  qs('p-meta').textContent = data.meta || '';
+      } catch (err) {
+        clearInterval(ticker);
+        console.error(err);
+        qs('pw').style.display = 'none';
+        qs('steps-el').style.display = 'none';
+        showErr(err.message || 'Something went wrong. Please try uploading again.');
+        setProg(0, '');
+      }
+    }
 
-  // Find earliest investment start date across all holdings
-  let earliest = null;
-  (data.members || []).forEach(m => {
-    (m.holdings || []).forEach(h => {
-      if (h.startDate) {
-        const d = new Date(h.startDate);
+    // DASHBOARD BUILD
+    function buildDashboard(data) {
+      currentData = data;
+      qs('p-title').textContent = data.title || 'Portfolio Dashboard';
+      qs('p-meta').textContent = data.meta || '';
+
+      // Find earliest investment start date across all holdings
+      let earliest = null;
+      (data.members || []).forEach(m => {
+        (m.holdings || []).forEach(h => {
+          if (h.startDate) {
+            const d = new Date(h.startDate);
+            if (!earliest || d < earliest) earliest = d;
+          }
+        });
+      });
+      // Also check top-level startDate if AI provides it
+      if (data.startDate) {
+        const d = new Date(data.startDate);
         if (!earliest || d < earliest) earliest = d;
       }
-    });
-  });
-  // Also check top-level startDate if AI provides it
-  if (data.startDate) {
-    const d = new Date(data.startDate);
-    if (!earliest || d < earliest) earliest = d;
-  }
 
-  const startBadge = earliest
-    ? `<span style="font-size:.7rem;background:rgba(201,168,76,.15);color:#8a6f1e;padding:3px 10px;border-radius:20px;font-family:'DM Mono',monospace;margin-left:.8rem;font-weight:600">📅 Since ${earliest.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})}</span>`
-    : (data.investmentSince
-      ? `<span style="font-size:.7rem;background:rgba(201,168,76,.15);color:#8a6f1e;padding:3px 10px;border-radius:20px;font-family:'DM Mono',monospace;margin-left:.8rem;font-weight:600">📅 Since ${data.investmentSince}</span>`
-      : '');
+      const startBadge = earliest
+        ? `<span style="font-size:.7rem;background:rgba(201,168,76,.15);color:#8a6f1e;padding:3px 10px;border-radius:20px;font-family:'DM Mono',monospace;margin-left:.8rem;font-weight:600">📅 Since ${earliest.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</span>`
+        : (data.investmentSince
+          ? `<span style="font-size:.7rem;background:rgba(201,168,76,.15);color:#8a6f1e;padding:3px 10px;border-radius:20px;font-family:'DM Mono',monospace;margin-left:.8rem;font-weight:600">📅 Since ${data.investmentSince}</span>`
+          : '');
 
-  const te = qs('tabs-el'); te.innerHTML = '';
-  data.members.forEach((m, i) => {
-    const t = document.createElement('div');
-    t.className = 'tab' + (i === 0 ? ' on' : '');
-    t.innerHTML = `<div class="av">${m.initials || '?'}</div>${m.name}${i === 0 ? startBadge : ''}`;
-    t.onclick = () => switchMember(i);
-    te.appendChild(t);
-  });
+      const te = qs('tabs-el'); te.innerHTML = '';
+      data.members.forEach((m, i) => {
+        const t = document.createElement('div');
+        t.className = 'tab' + (i === 0 ? ' on' : '');
+        t.innerHTML = `<div class="av">${m.initials || '?'}</div>${m.name}${i === 0 ? startBadge : ''}`;
+        t.onclick = () => switchMember(i);
+        te.appendChild(t);
+      });
 
-  switchMember(0);
-  qs('upload-page').style.display = 'none';
-  qs('dash-page').style.display = 'block';
-  qs('dash-page').classList.add('fadein');
-}
-
-function switchMember(idx) {
-  const m = currentData.members[idx];
-  const isAll = idx === 0;
-  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('on', i === idx));
-  renderKPI(m);
-  renderCharts(m);
-  renderTable(m);
-  renderSidebar(m, isAll);
-  renderConsolidated(m, isAll);
-}
-
-function renderKPI(m) {
-  const s = m.summary || {};
-  const gain = s.gain ?? ((s.current || 0) - (s.invested || 0));
-  const gainPct = s.gainPct || 0;
-  // For All Members, compute sipTotal from sipSummary (3rd month column from PDF)
-  const isAllMember = (m.name || '').toLowerCase().includes('all');
-  let computedSipTotal = s.sipTotal || 0;
-  if (isAllMember && currentData.sipSummary && currentData.sipSummary.length > 0) {
-    computedSipTotal = currentData.sipSummary.reduce((sum, s) => sum + (s.amount || 0), 0);
-  }
-  const sipL = computedSipTotal ? (computedSipTotal / 100000).toFixed(2).replace(/\.?0+$/, '') + 'L' : '—';
-  const sipSub = computedSipTotal ? ((m.sips||[]).length + ' mandates · 3rd Month') : 'No active SIP';
-  qs('kpi-row').innerHTML =
-    kpiCard(0, 'Total Invested', fmt(s.invested), (m.holdings||[]).length + ' schemes', 'neu') +
-    kpiCard(1, 'Current Value', fmt(s.current), (gainPct >= 0 ? '▲ ' : '▼ ') + Math.abs(gainPct).toFixed(2) + '%', gainPct >= 0 ? 'up' : 'dn') +
-    kpiCard(2, 'Total Gain / Loss', `<span style="color:${gain >= 0 ? 'var(--green-l)' : 'var(--coral)'}">${gain >= 0 ? '+' : ''}${fmt(gain)}</span>`, gain >= 0 ? 'Profit' : 'Loss', gain >= 0 ? 'up' : 'dn') +
-    kpiCard(3, 'Monthly SIP', computedSipTotal ? '₹' + sipL : '₹—', sipSub, 'neu') +
-    kpiCard(4, 'XIRR / CAGR', `<span style="color:${(s.xirr||0) >= 0 ? 'var(--green-l)' : 'var(--coral)'}">${(s.xirr||0).toFixed(2)}%</span>`, 'From MF Allocation Total', 'neu');
-}
-
-function kpiCard(c, label, val, sub, cls) {
-  return `<div class="kpi c${c}"><div class="kpi-lbl">${label}</div><div class="kpi-val">${val}</div><div class="kpi-sub ${cls}">${sub}</div></div>`;
-}
-
-const PAL = ['#1a5c4a','#3d7abf','#6b4fa0','#c9a84c','#e05c45','#2d8a6e','#88b04b','#e8912a','#d4845a','#5c9bd6'];
-function killChart(k) { if (charts[k]) { charts[k].destroy(); charts[k] = null; } }
-
-function renderCharts(m) {
-  killChart('ca'); killChart('cc'); killChart('cb');
-
-  // Asset Class Mix — always 3 categories: Equity, Debt, Gold
-  const rawAm = m.assetMix || {};
-  const eqKeys = ['Equity','equity'];
-  const dtKeys = ['Debt','debt','Liquid','liquid'];
-  const goldKeys = ['Gold','gold'];
-  let eqPct = 0, dtPct = 0, goldPct = 0;
-  Object.keys(rawAm).forEach(k => {
-    const v = rawAm[k] || 0;
-    const kl = k.toLowerCase();
-    if (kl.includes('gold')) goldPct += v;
-    else if (kl.includes('debt') || kl.includes('liquid') || kl.includes('arbitrage')) dtPct += v;
-    else eqPct += v; // equity, hybrid, balanced, other all go to equity
-  });
-  // If AI already gave 3-key format use directly
-  if (rawAm['Equity'] !== undefined && rawAm['Debt'] !== undefined) {
-    eqPct = rawAm['Equity'] || 0;
-    dtPct = rawAm['Debt'] || 0;
-    goldPct = rawAm['Gold'] || 0;
-  }
-  const amLabels = [], amData = [], amColors = [];
-  if (eqPct > 0) { amLabels.push('Equity'); amData.push(parseFloat(eqPct.toFixed(1))); amColors.push('#2d8a6e'); }
-  if (dtPct > 0) { amLabels.push('Debt'); amData.push(parseFloat(dtPct.toFixed(1))); amColors.push('#3d7abf'); }
-  if (goldPct > 0) { amLabels.push('Gold'); amData.push(parseFloat(goldPct.toFixed(1))); amColors.push('#c9a84c'); }
-
-  charts.ca = new Chart(qs('ca'), {
-    type: 'doughnut',
-    data: { labels: amLabels, datasets: [{ data: amData, backgroundColor: amColors, borderWidth: 2, borderColor: '#fff', hoverOffset: 5 }] },
-    options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { font: { family: 'DM Sans', size: 10 }, padding: 8, boxWidth: 9, color: '#0f1117' } }, tooltip: { callbacks: { label: c => ` ${c.label}: ${c.raw}%` } } } }
-  });
-
-  // Category Breakdown — use subCategories from PDF's "Mutual Fund Allocation by Sub Category" table
-  const subCatData = (currentData.subCategories || []).filter(sc => (sc.allocation || 0) > 0);
-  let ccLabels, ccData;
-  if (subCatData.length > 0) {
-    ccLabels = subCatData.map(sc => sc.cat);
-    ccData = subCatData.map(sc => parseFloat((sc.allocation || 0).toFixed(2)));
-  } else {
-    // fallback to categories field if subCategories not available
-    const cat = m.categories || {}, cl = Object.keys(cat).filter(k => cat[k] > 0);
-    ccLabels = cl; ccData = cl.map(k => cat[k]);
-  }
-  charts.cc = new Chart(qs('cc'), {
-    type: 'doughnut',
-    data: { labels: ccLabels, datasets: [{ data: ccData, backgroundColor: PAL, borderWidth: 2, borderColor: '#fff', hoverOffset: 5 }] },
-    options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: {
-      legend: { position: 'bottom', labels: { font: { family: 'DM Sans', size: 9 }, padding: 6, boxWidth: 9, color: '#0f1117' } },
-      tooltip: { callbacks: { label: c => ` ${c.label}: ${c.raw}%` } }
-    }}
-  });
-
-  const top = (m.holdings || []).slice().sort((a, b) => (b.current || 0) - (a.current || 0)).slice(0, 8);
-  const bc = top.map(h => h.badge === 'eq' ? '#2d8a6e' : h.badge === 'dt' ? '#3d7abf' : h.badge === 'hy' ? '#6b4fa0' : '#c9a84c');
-  charts.cb = new Chart(qs('cb'), {
-    type: 'bar',
-    data: {
-      labels: top.map(h => (h.name || '').replace(/ Reg \(G\)/g, '').replace(/ \(G\)/g, '').substring(0, 28)),
-      datasets: [
-        { label: 'Invested', data: top.map(h => h.invested || 0), backgroundColor: 'rgba(15,17,23,0.09)', borderRadius: 4 },
-        { label: 'Current', data: top.map(h => h.current || 0), backgroundColor: bc, borderRadius: 4 }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { font: { family: 'DM Sans', size: 11 } } }, tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${fmt(c.raw)}` } } },
-      scales: { x: { ticks: { font: { family: 'DM Sans', size: 8 }, maxRotation: 28 }, grid: { display: false } }, y: { ticks: { callback: v => fmt(v), font: { family: 'DM Mono', size: 9 } }, grid: { color: 'rgba(15,17,23,0.05)' } } }
+      switchMember(0);
+      qs('upload-page').style.display = 'none';
+      qs('dash-page').style.display = 'block';
+      qs('dash-page').classList.add('fadein');
     }
-  });
 
-  drawGauge(m.risk || { score: 5, label: 'Moderate' });
-}
+    function switchMember(idx) {
+      const m = currentData.members[idx];
+      const isAll = idx === 0;
+      document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('on', i === idx));
+      renderKPI(m);
+      renderCharts(m);
+      renderTable(m);
+      renderSidebar(m, isAll);
+      renderConsolidated(m, isAll);
+    }
 
-function drawGauge(risk) {
-  const cv = qs('gauge'), ctx = cv.getContext('2d'), cx = cv.width / 2, cy = cv.height - 5, r = 88;
-  ctx.clearRect(0, 0, cv.width, cv.height);
-  ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI, 0, false); ctx.lineWidth = 16; ctx.strokeStyle = '#e8e5df'; ctx.lineCap = 'round'; ctx.stroke();
-  [{ from: 0, to: .3, c: '#2d8a6e' }, { from: .3, to: .55, c: '#c9a84c' }, { from: .55, to: .8, c: '#e8912a' }, { from: .8, to: 1, c: '#e05c45' }].forEach(s => {
-    ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI + s.from * Math.PI, Math.PI + s.to * Math.PI, false);
-    ctx.lineWidth = 16; ctx.strokeStyle = s.c; ctx.lineCap = 'butt'; ctx.stroke();
-  });
-  const score = Math.min(10, Math.max(0, risk.score || 5)), ang = Math.PI + (score / 10) * Math.PI;
-  ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + 70 * Math.cos(ang), cy + 70 * Math.sin(ang));
-  ctx.strokeStyle = '#0f1117'; ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.stroke();
-  ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2); ctx.fillStyle = '#0f1117'; ctx.fill();
-  qs('rs-val').textContent = score.toFixed(1);
-  qs('rs-lbl').textContent = risk.label || '—';
-}
+    function renderKPI(m) {
+      const s = m.summary || {};
+      const gain = s.gain ?? ((s.current || 0) - (s.invested || 0));
+      const gainPct = s.gainPct || 0;
+      // For All Members, compute sipTotal from sipSummary (3rd month column from PDF)
+      const isAllMember = (m.name || '').toLowerCase().includes('all');
+      let computedSipTotal = s.sipTotal || 0;
+      if (isAllMember && currentData.sipSummary && currentData.sipSummary.length > 0) {
+        computedSipTotal = currentData.sipSummary.reduce((sum, s) => sum + (s.amount || 0), 0);
+      }
+      const sipL = computedSipTotal ? (computedSipTotal / 100000).toFixed(2).replace(/\.?0+$/, '') + 'L' : '—';
+      const sipSub = computedSipTotal ? ((m.sips || []).length + ' mandates · 3rd Month') : 'No active SIP';
+      qs('kpi-row').innerHTML =
+        kpiCard(0, 'Total Invested', fmt(s.invested), (m.holdings || []).length + ' schemes', 'neu') +
+        kpiCard(1, 'Current Value', fmt(s.current), (gainPct >= 0 ? '▲ ' : '▼ ') + Math.abs(gainPct).toFixed(2) + '%', gainPct >= 0 ? 'up' : 'dn') +
+        kpiCard(2, 'Total Gain / Loss', `<span style="color:${gain >= 0 ? 'var(--green-l)' : 'var(--coral)'}">${gain >= 0 ? '+' : ''}${fmt(gain)}</span>`, gain >= 0 ? 'Profit' : 'Loss', gain >= 0 ? 'up' : 'dn') +
+        kpiCard(3, 'Monthly SIP', computedSipTotal ? '₹' + sipL : '₹—', sipSub, 'neu') +
+        kpiCard(4, 'XIRR / CAGR', `<span style="color:${(s.xirr || 0) >= 0 ? 'var(--green-l)' : 'var(--coral)'}">${(s.xirr || 0).toFixed(2)}%</span>`, 'From MF Allocation Total', 'neu');
+    }
 
-function renderTable(m) {
-  const holdings = m.holdings || [], total = holdings.reduce((s, h) => s + (h.current || 0), 0) || 1;
-  qs('t-body').innerHTML = holdings.map(h => {
-    const g = (h.current || 0) - (h.invested || 0);
-    const gp = h.invested ? (g / h.invested * 100).toFixed(1) : '0.0';
-    const al = ((h.current || 0) / total * 100).toFixed(1);
-    const col = h.badge === 'eq' ? '#2d8a6e' : h.badge === 'dt' ? '#3d7abf' : h.badge === 'hy' ? '#6b4fa0' : '#c9a84c';
-    const xirr = h.xirr || 0;
-    return `<tr>
+    function kpiCard(c, label, val, sub, cls) {
+      return `<div class="kpi c${c}"><div class="kpi-lbl">${label}</div><div class="kpi-val">${val}</div><div class="kpi-sub ${cls}">${sub}</div></div>`;
+    }
+
+    const PAL = ['#1a5c4a', '#3d7abf', '#6b4fa0', '#c9a84c', '#e05c45', '#2d8a6e', '#88b04b', '#e8912a', '#d4845a', '#5c9bd6'];
+    function killChart(k) { if (charts[k]) { charts[k].destroy(); charts[k] = null; } }
+
+    function renderCharts(m) {
+      killChart('ca'); killChart('cc'); killChart('cb');
+
+      // Asset Class Mix — always 3 categories: Equity, Debt, Gold
+      const rawAm = m.assetMix || {};
+      const eqKeys = ['Equity', 'equity'];
+      const dtKeys = ['Debt', 'debt', 'Liquid', 'liquid'];
+      const goldKeys = ['Gold', 'gold'];
+      let eqPct = 0, dtPct = 0, goldPct = 0;
+      Object.keys(rawAm).forEach(k => {
+        const v = rawAm[k] || 0;
+        const kl = k.toLowerCase();
+        if (kl.includes('gold')) goldPct += v;
+        else if (kl.includes('debt') || kl.includes('liquid') || kl.includes('arbitrage')) dtPct += v;
+        else eqPct += v; // equity, hybrid, balanced, other all go to equity
+      });
+      // If AI already gave 3-key format use directly
+      if (rawAm['Equity'] !== undefined && rawAm['Debt'] !== undefined) {
+        eqPct = rawAm['Equity'] || 0;
+        dtPct = rawAm['Debt'] || 0;
+        goldPct = rawAm['Gold'] || 0;
+      }
+      const amLabels = [], amData = [], amColors = [];
+      if (eqPct > 0) { amLabels.push('Equity'); amData.push(parseFloat(eqPct.toFixed(1))); amColors.push('#2d8a6e'); }
+      if (dtPct > 0) { amLabels.push('Debt'); amData.push(parseFloat(dtPct.toFixed(1))); amColors.push('#3d7abf'); }
+      if (goldPct > 0) { amLabels.push('Gold'); amData.push(parseFloat(goldPct.toFixed(1))); amColors.push('#c9a84c'); }
+
+      charts.ca = new Chart(qs('ca'), {
+        type: 'doughnut',
+        data: { labels: amLabels, datasets: [{ data: amData, backgroundColor: amColors, borderWidth: 2, borderColor: '#fff', hoverOffset: 5 }] },
+        options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { font: { family: 'DM Sans', size: 10 }, padding: 8, boxWidth: 9, color: '#0f1117' } }, tooltip: { callbacks: { label: c => ` ${c.label}: ${c.raw}%` } } } }
+      });
+
+      // Category Breakdown — use subCategories from PDF's "Mutual Fund Allocation by Sub Category" table
+      const subCatData = (currentData.subCategories || []).filter(sc => (sc.allocation || 0) > 0);
+      let ccLabels, ccData;
+      if (subCatData.length > 0) {
+        ccLabels = subCatData.map(sc => sc.cat);
+        ccData = subCatData.map(sc => parseFloat((sc.allocation || 0).toFixed(2)));
+      } else {
+        // fallback to categories field if subCategories not available
+        const cat = m.categories || {}, cl = Object.keys(cat).filter(k => cat[k] > 0);
+        ccLabels = cl; ccData = cl.map(k => cat[k]);
+      }
+      charts.cc = new Chart(qs('cc'), {
+        type: 'doughnut',
+        data: { labels: ccLabels, datasets: [{ data: ccData, backgroundColor: PAL, borderWidth: 2, borderColor: '#fff', hoverOffset: 5 }] },
+        options: {
+          responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: {
+            legend: { position: 'bottom', labels: { font: { family: 'DM Sans', size: 9 }, padding: 6, boxWidth: 9, color: '#0f1117' } },
+            tooltip: { callbacks: { label: c => ` ${c.label}: ${c.raw}%` } }
+          }
+        }
+      });
+
+      const top = (m.holdings || []).slice().sort((a, b) => (b.current || 0) - (a.current || 0)).slice(0, 8);
+      const bc = top.map(h => h.badge === 'eq' ? '#2d8a6e' : h.badge === 'dt' ? '#3d7abf' : h.badge === 'hy' ? '#6b4fa0' : '#c9a84c');
+      charts.cb = new Chart(qs('cb'), {
+        type: 'bar',
+        data: {
+          labels: top.map(h => (h.name || '').replace(/ Reg \(G\)/g, '').replace(/ \(G\)/g, '').substring(0, 28)),
+          datasets: [
+            { label: 'Invested', data: top.map(h => h.invested || 0), backgroundColor: 'rgba(15,17,23,0.09)', borderRadius: 4 },
+            { label: 'Current', data: top.map(h => h.current || 0), backgroundColor: bc, borderRadius: 4 }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { labels: { font: { family: 'DM Sans', size: 11 } } }, tooltip: { callbacks: { label: c => ` ${c.dataset.label}: ${fmt(c.raw)}` } } },
+          scales: { x: { ticks: { font: { family: 'DM Sans', size: 8 }, maxRotation: 28 }, grid: { display: false } }, y: { ticks: { callback: v => fmt(v), font: { family: 'DM Mono', size: 9 } }, grid: { color: 'rgba(15,17,23,0.05)' } } }
+        }
+      });
+
+      drawGauge(m.risk || { score: 5, label: 'Moderate' });
+    }
+
+    function drawGauge(risk) {
+      const cv = qs('gauge'), ctx = cv.getContext('2d'), cx = cv.width / 2, cy = cv.height - 5, r = 88;
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI, 0, false); ctx.lineWidth = 16; ctx.strokeStyle = '#e8e5df'; ctx.lineCap = 'round'; ctx.stroke();
+      [{ from: 0, to: .3, c: '#2d8a6e' }, { from: .3, to: .55, c: '#c9a84c' }, { from: .55, to: .8, c: '#e8912a' }, { from: .8, to: 1, c: '#e05c45' }].forEach(s => {
+        ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI + s.from * Math.PI, Math.PI + s.to * Math.PI, false);
+        ctx.lineWidth = 16; ctx.strokeStyle = s.c; ctx.lineCap = 'butt'; ctx.stroke();
+      });
+      const score = Math.min(10, Math.max(0, risk.score || 5)), ang = Math.PI + (score / 10) * Math.PI;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + 70 * Math.cos(ang), cy + 70 * Math.sin(ang));
+      ctx.strokeStyle = '#0f1117'; ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2); ctx.fillStyle = '#0f1117'; ctx.fill();
+      qs('rs-val').textContent = score.toFixed(1);
+      qs('rs-lbl').textContent = risk.label || '—';
+    }
+
+    function renderTable(m) {
+      const holdings = m.holdings || [], total = holdings.reduce((s, h) => s + (h.current || 0), 0) || 1;
+      qs('t-body').innerHTML = holdings.map(h => {
+        const g = (h.current || 0) - (h.invested || 0);
+        const gp = h.invested ? (g / h.invested * 100).toFixed(1) : '0.0';
+        const al = ((h.current || 0) / total * 100).toFixed(1);
+        const col = h.badge === 'eq' ? '#2d8a6e' : h.badge === 'dt' ? '#3d7abf' : h.badge === 'hy' ? '#6b4fa0' : '#c9a84c';
+        const xirr = h.xirr || 0;
+        return `<tr>
       <td><div class="fn">${h.name || '—'}</div>${h.holder ? `<div class="fc">Holder: ${h.holder}</div>` : ''}</td>
       <td><span class="cbadge ${h.badge || 'eq'}">${h.cat || '—'}</span></td>
-      <td>${fmt(h.invested)}</td>
-      <td style="font-weight:500">${fmt(h.current)}</td>
+      <td style="font-family:'DM Sans',sans-serif;font-weight:500;font-size:.82rem;color:var(--ink)">${fmt(h.invested)}</td>
+      <td style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:.82rem;color:var(--ink)">${fmt(h.current)}</td>
       <td class="${g >= 0 ? 'rp' : 'rn'}">${g >= 0 ? '+' : ''}${gp}%</td>
       <td><div class="ab"><div class="abar"><div class="afill" style="width:${al}%;background:${col}"></div></div><span style="font-family:'DM Sans',sans-serif;font-size:.72rem;color:rgba(15,17,23,.45)">${al}%</span></div></td>
       <td class="${xirr >= 10 ? 'rp' : xirr >= 0 ? 'neu' : 'rn'}">${xirr.toFixed(2)}%</td>
     </tr>`;
-  }).join('');
-}
-
-function renderSidebar(m, isAll) {
-  // Hide SIP section in sidebar for All Members tab
-  const sipSection = qs('sip-list');
-  const sipTitle = sipSection ? sipSection.previousElementSibling : null;
-  const sipDivider = sipTitle ? sipTitle.previousElementSibling : null;
-  if (isAll) {
-    if (sipSection) sipSection.style.display = 'none';
-    if (sipTitle) sipTitle.style.display = 'none';
-    if (sipDivider) sipDivider.style.display = 'none';
-  } else {
-    if (sipSection) sipSection.style.display = '';
-    if (sipTitle) sipTitle.style.display = '';
-    if (sipDivider) sipDivider.style.display = '';
-  }
-  const sips = m.sips || [];
-  qs('sip-list').innerHTML = sips.length
-    ? sips.map(s => `<div class="sip-row"><div><div class="sip-nm">${s.name}</div><div class="sip-dt">Every month · ${s.date || '—'}</div></div><div class="sip-amt">₹${(s.amount || 0).toLocaleString('en-IN')}</div></div>`).join('')
-    : '<div style="font-size:.8rem;color:rgba(15,17,23,.4);padding:.5rem 0">No active SIP found</div>';
-
-  // Goal tracker removed — replaced by scheme search
-
-  const icons = { warn: '⚠️', info: 'ℹ️', ok: '✅' };
-  const typeLabels = { warn: 'Warning', info: 'Insight', ok: 'Good' };
-  const typeColors = { warn: '#e05c45', info: '#3b82f6', ok: '#2d8a6e' };
-  // Compute smart advisory alerts
-  const smartAlerts = computeAdvisoryAlerts(m);
-  const allAlerts = [...smartAlerts, ...(m.alerts || [])];
-
-  // Update count badge
-  const countEl = qs('alert-count');
-  if (countEl) {
-    if (allAlerts.length > 0) {
-      countEl.textContent = allAlerts.length;
-      countEl.style.display = 'inline-block';
-      // Color badge based on most severe alert
-      const hasWarn = allAlerts.some(a => a.type === 'warn');
-      countEl.style.background = hasWarn ? '#e05c45' : 'var(--blue)';
-    } else {
-      countEl.style.display = 'none';
+      }).join('');
     }
-  }
 
-  qs('alert-list').innerHTML = allAlerts.length
-    ? allAlerts.map(a => `<div class="alert-box ${a.type}"><span style="flex-shrink:0;font-size:1.1rem">${icons[a.type] || '•'}</span><div style="flex:1"><div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:${typeColors[a.type] || '#666'};margin-bottom:3px">${typeLabels[a.type] || 'Note'}</div><span style="color:var(--ink);font-weight:500;">${a.text}</span></div></div>`).join('')
-    : '<div style="font-size:.8rem;color:rgba(15,17,23,.4);padding:.5rem 0">No alerts</div>';
-}
-
-function computeAdvisoryAlerts(m) {
-  const alerts = [];
-  const holdings = m.holdings || [];
-  const totalCurrent = holdings.reduce((s, h) => s + (h.current || 0), 0) || 1;
-  const subCats = currentData.subCategories || [];
-  const amcData = currentData.amcAllocation || [];
-
-  // ── RULE 1: AMC concentration > 20% ──
-  amcData.forEach(a => {
-    if ((a.allocation || 0) > 20) {
-      alerts.push({ type: 'warn', text: `⚠️ AMC Concentration: ${a.amc} has ${a.allocation.toFixed(1)}% allocation (limit: 20%). Consider spreading across other AMCs to reduce concentration risk.` });
-    }
-  });
-
-  // ── RULE 2: Thematic / Sectoral / ELSS schemes ──
-  const specialKeywords = ['thematic','sector','sectoral','banking','pharma','infra','infrastructure','technology','tech','consumption','elss','tax saver','tax saving','psu','energy','defence','manufacturing'];
-  const specialFunds = holdings.filter(h => {
-    const n = (h.name || '').toLowerCase();
-    const c = (h.cat || '').toLowerCase();
-    return specialKeywords.some(k => n.includes(k) || c.includes(k));
-  });
-  if (specialFunds.length > 0) {
-    alerts.push({ type: 'info', text: `ℹ️ Special Schemes Detected: ${specialFunds.map(f => f.name.replace(/ Reg \(G\)|\(G\)/g,'')).join(', ')} — Thematic/Sectoral/ELSS funds carry concentration risk. Review if these align with long-term goals.` });
-  }
-
-  // ── RULE 3: Equity > 70% or Debt > 30% ──
-  const rawAm = m.assetMix || {};
-  let eqPct = 0, dtPct = 0, goldPct = 0;
-  Object.keys(rawAm).forEach(k => {
-    const v = rawAm[k] || 0, kl = k.toLowerCase();
-    if (kl.includes('gold')) goldPct += v;
-    else if (kl.includes('debt') || kl.includes('liquid') || kl.includes('arbitrage')) dtPct += v;
-    else eqPct += v;
-  });
-  if (rawAm['Equity'] !== undefined) { eqPct = rawAm['Equity'] || 0; dtPct = rawAm['Debt'] || 0; goldPct = rawAm['Gold'] || 0; }
-  if (eqPct > 70) alerts.push({ type: 'warn', text: `⚠️ High Equity Exposure: ${eqPct.toFixed(1)}% in Equity (recommended max: 70%). Consider rebalancing into Debt or Gold for stability.` });
-  if (dtPct > 30) alerts.push({ type: 'warn', text: `⚠️ High Debt Exposure: ${dtPct.toFixed(1)}% in Debt (recommended max: 30%). Review if this matches the client's risk profile and investment horizon.` });
-
-  // ── RULE 4: Single scheme > 10% allocation ──
-  holdings.forEach(h => {
-    const al = (h.current || 0) / totalCurrent * 100;
-    if (al > 10) {
-      alerts.push({ type: 'warn', text: `⚠️ Scheme Concentration: ${(h.name||'').replace(/ Reg \(G\)|\(G\)/g,'')} has ${al.toFixed(1)}% allocation (limit: 10%). Reduce to avoid over-exposure to a single scheme.` });
-    }
-  });
-
-  // ── RULE 5: Category allocation vs ideal ranges ──
-  const idealRanges = {
-    'mid cap':   { min: 25, max: 30, label: 'Mid Cap' },
-    'small cap': { min: 15, max: 20, label: 'Small Cap' },
-    'flexi cap': { min: 30, max: 35, label: 'Flexi Cap' },
-    'large cap': { min: 20, max: 30, label: 'Large Cap + Large & Mid Cap', combined: true },
-    'large & mid': { skip: true },
-  };
-  let largeMidPct = 0;
-  subCats.forEach(sc => {
-    const cl = (sc.cat || '').toLowerCase();
-    const pct = sc.allocation || 0;
-    if (cl.includes('large & mid') || cl.includes('large and mid')) largeMidPct += pct;
-    Object.keys(idealRanges).forEach(key => {
-      const rule = idealRanges[key];
-      if (rule.skip || rule.combined) return;
-      if (cl.includes(key)) {
-        if (pct < rule.min) alerts.push({ type: 'info', text: `📊 Category Alert: ${rule.label} is at ${pct.toFixed(1)}% — below ideal range of ${rule.min}–${rule.max}%. Consider increasing allocation.` });
-        else if (pct > rule.max) alerts.push({ type: 'warn', text: `⚠️ Category Alert: ${rule.label} is at ${pct.toFixed(1)}% — above ideal range of ${rule.min}–${rule.max}%. Consider reducing allocation.` });
+    function renderSidebar(m, isAll) {
+      // Hide SIP section in sidebar for All Members tab
+      const sipSection = qs('sip-list');
+      const sipTitle = sipSection ? sipSection.previousElementSibling : null;
+      const sipDivider = sipTitle ? sipTitle.previousElementSibling : null;
+      if (isAll) {
+        if (sipSection) sipSection.style.display = 'none';
+        if (sipTitle) sipTitle.style.display = 'none';
+        if (sipDivider) sipDivider.style.display = 'none';
+      } else {
+        if (sipSection) sipSection.style.display = '';
+        if (sipTitle) sipTitle.style.display = '';
+        if (sipDivider) sipDivider.style.display = '';
       }
-    });
-  });
-  // Large Cap combined check
-  const largePct = (subCats.find(sc => (sc.cat||'').toLowerCase().includes('large cap') && !(sc.cat||'').toLowerCase().includes('mid')) || {}).allocation || 0;
-  const totalLargePct = largePct + largeMidPct;
-  if (totalLargePct > 0) {
-    if (totalLargePct < 20) alerts.push({ type: 'info', text: `📊 Category Alert: Large Cap + Large & Mid Cap combined is ${totalLargePct.toFixed(1)}% — below ideal range of 20–30%. Consider adding stability with large cap exposure.` });
-    else if (totalLargePct > 30) alerts.push({ type: 'warn', text: `⚠️ Category Alert: Large Cap + Large & Mid Cap combined is ${totalLargePct.toFixed(1)}% — above ideal range of 20–30%. Portfolio may be too conservative on the large cap side.` });
-  }
+      const sips = m.sips || [];
+      qs('sip-list').innerHTML = sips.length
+        ? sips.map(s => `<div class="sip-row"><div><div class="sip-nm">${s.name}</div><div class="sip-dt">Every month · ${s.date || '—'}</div></div><div class="sip-amt">₹${(s.amount || 0).toLocaleString('en-IN')}</div></div>`).join('')
+        : '<div style="font-size:.8rem;color:rgba(15,17,23,.4);padding:.5rem 0">No active SIP found</div>';
 
-  // ── RULE 6: No Gold in portfolio ──
-  const hasGold = goldPct > 0 || subCats.some(sc => (sc.cat||'').toLowerCase().includes('gold')) || holdings.some(h => (h.name||'').toLowerCase().includes('gold') || (h.cat||'').toLowerCase().includes('gold'));
-  if (!hasGold) alerts.push({ type: 'info', text: `💡 Gold Missing: No gold allocation found in this portfolio. Consider adding 5–10% in Gold ETF or Sovereign Gold Bonds for inflation hedging and diversification.` });
+      // Goal tracker removed — replaced by scheme search
 
-  // ── RULE 7: IDCW schemes in portfolio ──
-  const idcwFunds = holdings.filter(h => (h.name || '').toUpperCase().includes('IDCW'));
-  if (idcwFunds.length > 0) {
-    alerts.push({ type: 'warn', text: `⚠️ IDCW Schemes Detected: ${idcwFunds.map(f => f.name.replace(/ Reg \(G\)/g,'').replace(/\(G\)/g,'')).join(', ')} — IDCW (dividend) option creates tax liability on payouts. Consider switching to Growth option for better long-term compounding.` });
-  }
+      const icons = { warn: '⚠️', info: 'ℹ️', ok: '✅' };
+      const typeLabels = { warn: 'Warning', info: 'Insight', ok: 'Good' };
+      const typeColors = { warn: '#e05c45', info: '#3b82f6', ok: '#2d8a6e' };
+      // Compute smart advisory alerts
+      const smartAlerts = computeAdvisoryAlerts(m);
+      const allAlerts = [...smartAlerts, ...(m.alerts || [])];
 
-  // ── RULE 8: Unwanted schemes in portfolio ──
-  if (unwantedSchemes && unwantedSchemes.length > 0) {
-    unwantedSchemes.forEach(unwanted => {
-      const matched = holdings.filter(h =>
-        (h.name || '').toLowerCase().includes(unwanted.toLowerCase())
-      );
-      if (matched.length > 0) {
-        const names = matched.map(h => h.name.replace(/ Reg \(G\)/g,'').replace(/\(G\)/g,'')).join(', ');
-        alerts.push({ type: 'warn', text: `🚫 Unwanted Scheme Alert: "${unwanted}" is present in this portfolio (${names}). Consider switching to a better alternative.` });
+      // Update count badge
+      const countEl = qs('alert-count');
+      if (countEl) {
+        if (allAlerts.length > 0) {
+          countEl.textContent = allAlerts.length;
+          countEl.style.display = 'inline-block';
+          // Color badge based on most severe alert
+          const hasWarn = allAlerts.some(a => a.type === 'warn');
+          countEl.style.background = hasWarn ? '#e05c45' : 'var(--blue)';
+        } else {
+          countEl.style.display = 'none';
+        }
       }
-    });
-  }
 
-  return alerts;
-}
+      qs('alert-list').innerHTML = allAlerts.length
+        ? allAlerts.map(a => `<div class="alert-box ${a.type}"><span style="flex-shrink:0;font-size:1.1rem">${icons[a.type] || '•'}</span><div style="flex:1"><div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:${typeColors[a.type] || '#666'};margin-bottom:3px">${typeLabels[a.type] || 'Note'}</div><span>${a.text}</span></div></div>`).join('')
+        : '<div style="font-size:.8rem;color:rgba(15,17,23,.4);padding:.5rem 0">No alerts</div>';
+    }
 
-// CONSOLIDATED OVERVIEW (All Members only)
-function renderConsolidated(m, isAll) {
-  const wrap = qs('consol-overview');
-  if (!isAll) { wrap.style.display = 'none'; return; }
-  wrap.style.display = 'block';
+    function computeAdvisoryAlerts(m) {
+      const alerts = [];
+      const holdings = m.holdings || [];
+      const totalCurrent = holdings.reduce((s, h) => s + (h.current || 0), 0) || 1;
+      const subCats = currentData.subCategories || [];
+      const amcData = currentData.amcAllocation || [];
 
-  const COLORS = ['#1a5c4a','#3d7abf','#6b4fa0','#c9a84c','#e05c45','#2d8a6e','#88b04b','#e8912a','#d4845a','#5c9bd6','#b04f6f','#4f8ab0','#2196f3','#9c27b0','#ff5722'];
+      // ── RULE 1: AMC concentration > 20% ──
+      amcData.forEach(a => {
+        if ((a.allocation || 0) > 20) {
+          alerts.push({ type: 'warn', text: `⚠️ AMC Concentration: ${a.amc} has ${a.allocation.toFixed(1)}% allocation (limit: 20%). Consider spreading across other AMCs to reduce concentration risk.` });
+        }
+      });
 
-  // ── SIP: use sipSummary (3rd month column from PDF) for consolidated view ──
-  const sipSummaryData = (currentData.sipSummary || []).filter(s => (s.amount || 0) > 0);
-  // Merge duplicates by fund name
-  const sipMap = {};
-  sipSummaryData.forEach(s => {
-    const key = (s.name || '').trim().toLowerCase()
-      .replace(/\s+reg\s*/gi,'').replace(/\s*\(g\)\s*/gi,'').replace(/\s+/g,' ').trim();
-    if (!sipMap[key]) sipMap[key] = { name: (s.name || '').trim(), amount: 0 };
-    sipMap[key].amount += (s.amount || 0);
-  });
-  const sipRows = Object.values(sipMap).filter(r => r.amount > 0).sort((a, b) => b.amount - a.amount);
-  const sipTotal = sipRows.reduce((s, r) => s + r.amount, 0);
+      // ── RULE 2: Thematic / Sectoral / ELSS schemes ──
+      const specialKeywords = ['thematic', 'sector', 'sectoral', 'banking', 'pharma', 'infra', 'infrastructure', 'technology', 'tech', 'consumption', 'elss', 'tax saver', 'tax saving', 'psu', 'energy', 'defence', 'manufacturing'];
+      const specialFunds = holdings.filter(h => {
+        const n = (h.name || '').toLowerCase();
+        const c = (h.cat || '').toLowerCase();
+        return specialKeywords.some(k => n.includes(k) || c.includes(k));
+      });
+      if (specialFunds.length > 0) {
+        alerts.push({ type: 'info', text: `ℹ️ Special Schemes Detected: ${specialFunds.map(f => f.name.replace(/ Reg \(G\)|\(G\)/g, '')).join(', ')} — Thematic/Sectoral/ELSS funds carry concentration risk. Review if these align with long-term goals.` });
+      }
 
-  // ── SIP TABLE HTML ──
-  let sipBody = sipRows.length === 0
-    ? `<tr><td colspan="3" style="text-align:center;padding:2rem;color:rgba(15,17,23,.35);font-size:.82rem">No active SIP found</td></tr>`
-    : sipRows.map((r, i) => {
-        const pct = sipTotal > 0 ? (r.amount / sipTotal * 100) : 0;
-        const color = COLORS[i % COLORS.length];
-        return `<tr style="border-bottom:1px solid rgba(15,17,23,.04)">
+      // ── RULE 3: Equity > 70% or Debt > 30% ──
+      const rawAm = m.assetMix || {};
+      let eqPct = 0, dtPct = 0, goldPct = 0;
+      Object.keys(rawAm).forEach(k => {
+        const v = rawAm[k] || 0, kl = k.toLowerCase();
+        if (kl.includes('gold')) goldPct += v;
+        else if (kl.includes('debt') || kl.includes('liquid') || kl.includes('arbitrage')) dtPct += v;
+        else eqPct += v;
+      });
+      if (rawAm['Equity'] !== undefined) { eqPct = rawAm['Equity'] || 0; dtPct = rawAm['Debt'] || 0; goldPct = rawAm['Gold'] || 0; }
+      if (eqPct > 70) alerts.push({ type: 'warn', text: `⚠️ High Equity Exposure: ${eqPct.toFixed(1)}% in Equity (recommended max: 70%). Consider rebalancing into Debt or Gold for stability.` });
+      if (dtPct > 30) alerts.push({ type: 'warn', text: `⚠️ High Debt Exposure: ${dtPct.toFixed(1)}% in Debt (recommended max: 30%). Review if this matches the client's risk profile and investment horizon.` });
+
+      // ── RULE 4: Single scheme > 10% allocation ──
+      holdings.forEach(h => {
+        const al = (h.current || 0) / totalCurrent * 100;
+        if (al > 10) {
+          alerts.push({ type: 'warn', text: `⚠️ Scheme Concentration: ${(h.name || '').replace(/ Reg \(G\)|\(G\)/g, '')} has ${al.toFixed(1)}% allocation (limit: 10%). Reduce to avoid over-exposure to a single scheme.` });
+        }
+      });
+
+      // ── RULE 5: Category allocation vs ideal ranges ──
+      const idealRanges = {
+        'mid cap': { min: 25, max: 30, label: 'Mid Cap' },
+        'small cap': { min: 15, max: 20, label: 'Small Cap' },
+        'flexi cap': { min: 30, max: 35, label: 'Flexi Cap' },
+        'large cap': { min: 20, max: 30, label: 'Large Cap + Large & Mid Cap', combined: true },
+        'large & mid': { skip: true },
+      };
+      let largeMidPct = 0;
+      subCats.forEach(sc => {
+        const cl = (sc.cat || '').toLowerCase();
+        const pct = sc.allocation || 0;
+        if (cl.includes('large & mid') || cl.includes('large and mid')) largeMidPct += pct;
+        Object.keys(idealRanges).forEach(key => {
+          const rule = idealRanges[key];
+          if (rule.skip || rule.combined) return;
+          if (cl.includes(key)) {
+            if (pct < rule.min) alerts.push({ type: 'info', text: `📊 Category Alert: ${rule.label} is at ${pct.toFixed(1)}% — below ideal range of ${rule.min}–${rule.max}%. Consider increasing allocation.` });
+            else if (pct > rule.max) alerts.push({ type: 'warn', text: `⚠️ Category Alert: ${rule.label} is at ${pct.toFixed(1)}% — above ideal range of ${rule.min}–${rule.max}%. Consider reducing allocation.` });
+          }
+        });
+      });
+      // Large Cap combined check
+      const largePct = (subCats.find(sc => (sc.cat || '').toLowerCase().includes('large cap') && !(sc.cat || '').toLowerCase().includes('mid')) || {}).allocation || 0;
+      const totalLargePct = largePct + largeMidPct;
+      if (totalLargePct > 0) {
+        if (totalLargePct < 20) alerts.push({ type: 'info', text: `📊 Category Alert: Large Cap + Large & Mid Cap combined is ${totalLargePct.toFixed(1)}% — below ideal range of 20–30%. Consider adding stability with large cap exposure.` });
+        else if (totalLargePct > 30) alerts.push({ type: 'warn', text: `⚠️ Category Alert: Large Cap + Large & Mid Cap combined is ${totalLargePct.toFixed(1)}% — above ideal range of 20–30%. Portfolio may be too conservative on the large cap side.` });
+      }
+
+      // ── RULE 6: No Gold in portfolio ──
+      const hasGold = goldPct > 0 || subCats.some(sc => (sc.cat || '').toLowerCase().includes('gold')) || holdings.some(h => (h.name || '').toLowerCase().includes('gold') || (h.cat || '').toLowerCase().includes('gold'));
+      if (!hasGold) alerts.push({ type: 'info', text: `💡 Gold Missing: No gold allocation found in this portfolio. Consider adding 5–10% in Gold ETF or Sovereign Gold Bonds for inflation hedging and diversification.` });
+
+      // ── RULE 7: IDCW schemes in portfolio ──
+      const idcwFunds = holdings.filter(h => (h.name || '').toUpperCase().includes('IDCW'));
+      if (idcwFunds.length > 0) {
+        alerts.push({ type: 'warn', text: `⚠️ IDCW Schemes Detected: ${idcwFunds.map(f => f.name.replace(/ Reg \(G\)/g, '').replace(/\(G\)/g, '')).join(', ')} — IDCW (dividend) option creates tax liability on payouts. Consider switching to Growth option for better long-term compounding.` });
+      }
+
+      // ── RULE 8: Unwanted schemes in portfolio ──
+      if (unwantedSchemes && unwantedSchemes.length > 0) {
+        unwantedSchemes.forEach(unwanted => {
+          const matched = holdings.filter(h =>
+            (h.name || '').toLowerCase().includes(unwanted.toLowerCase())
+          );
+          if (matched.length > 0) {
+            const names = matched.map(h => h.name.replace(/ Reg \(G\)/g, '').replace(/\(G\)/g, '')).join(', ');
+            alerts.push({ type: 'warn', text: `🚫 Unwanted Scheme Alert: "${unwanted}" is present in this portfolio (${names}). Consider switching to a better alternative.` });
+          }
+        });
+      }
+
+      return alerts;
+    }
+
+    // CONSOLIDATED OVERVIEW (All Members only)
+    function renderConsolidated(m, isAll) {
+      const wrap = qs('consol-overview');
+      if (!isAll) { wrap.style.display = 'none'; return; }
+      wrap.style.display = 'block';
+
+      const COLORS = ['#1a5c4a', '#3d7abf', '#6b4fa0', '#c9a84c', '#e05c45', '#2d8a6e', '#88b04b', '#e8912a', '#d4845a', '#5c9bd6', '#b04f6f', '#4f8ab0', '#2196f3', '#9c27b0', '#ff5722'];
+
+      // ── SIP: use sipSummary (3rd month column from PDF) for consolidated view ──
+      const sipSummaryData = (currentData.sipSummary || []).filter(s => (s.amount || 0) > 0);
+      // Merge duplicates by fund name
+      const sipMap = {};
+      sipSummaryData.forEach(s => {
+        const key = (s.name || '').trim().toLowerCase()
+          .replace(/\s+reg\s*/gi, '').replace(/\s*\(g\)\s*/gi, '').replace(/\s+/g, ' ').trim();
+        if (!sipMap[key]) sipMap[key] = { name: (s.name || '').trim(), amount: 0 };
+        sipMap[key].amount += (s.amount || 0);
+      });
+      const sipRows = Object.values(sipMap).filter(r => r.amount > 0).sort((a, b) => b.amount - a.amount);
+      const sipTotal = sipRows.reduce((s, r) => s + r.amount, 0);
+
+      // ── SIP TABLE HTML ──
+      let sipBody = sipRows.length === 0
+        ? `<tr><td colspan="3" style="text-align:center;padding:2rem;color:rgba(15,17,23,.35);font-size:.82rem">No active SIP found</td></tr>`
+        : sipRows.map((r, i) => {
+          const pct = sipTotal > 0 ? (r.amount / sipTotal * 100) : 0;
+          const color = COLORS[i % COLORS.length];
+          return `<tr style="border-bottom:1px solid rgba(15,17,23,.04)">
           <td style="padding:.65rem .85rem">
             <div style="display:flex;align-items:center;gap:.5rem">
               <span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;display:inline-block"></span>
@@ -916,15 +1877,15 @@ function renderConsolidated(m, isAll) {
           <td style="padding:.65rem .85rem">
             <div style="display:flex;align-items:center;gap:.4rem;justify-content:flex-end">
               <div style="width:60px;height:4px;background:rgba(15,17,23,.06);border-radius:4px;overflow:hidden">
-                <div style="height:100%;width:${Math.min(pct,100).toFixed(1)}%;background:${color};border-radius:4px"></div>
+                <div style="height:100%;width:${Math.min(pct, 100).toFixed(1)}%;background:${color};border-radius:4px"></div>
               </div>
-              <span style="font-family:'DM Mono',monospace;font-size:.72rem;color:rgba(15,17,23,.5);min-width:38px;text-align:right">${pct.toFixed(1)}%</span>
+              <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:.72rem;color:rgba(15,17,23,.5);min-width:38px;text-align:right">${pct.toFixed(1)}%</span>
             </div>
           </td>
         </tr>`;
-      }).join('');
+        }).join('');
 
-  const sipFooter = sipRows.length > 0 ? `
+      const sipFooter = sipRows.length > 0 ? `
     <tfoot>
       <tr style="background:rgba(26,92,74,.05);border-top:2px solid var(--border)">
         <td style="font-weight:700;font-size:.82rem;padding:.75rem .85rem">Total Monthly SIP</td>
@@ -933,7 +1894,7 @@ function renderConsolidated(m, isAll) {
       </tr>
     </tfoot>` : '';
 
-  const sipSection = `
+      const sipSection = `
     <div class="consol-box">
       <div class="consol-hdr">📅 &nbsp;Consolidated SIP Details</div>
       <table style="width:100%;border-collapse:collapse">
@@ -949,20 +1910,20 @@ function renderConsolidated(m, isAll) {
       </table>
     </div>`;
 
-  // ── SUB-CATEGORY from subCategories field ──
-  const catRows = (currentData.subCategories || []).filter(r => (r.allocation || 0) > 0).sort((a, b) => (b.current || 0) - (a.current || 0));
-  const catTotalInv = catRows.reduce((s, r) => s + (r.invested || 0), 0);
-  const catTotalCur = catRows.reduce((s, r) => s + (r.current || 0), 0);
+      // ── SUB-CATEGORY from subCategories field ──
+      const catRows = (currentData.subCategories || []).filter(r => (r.allocation || 0) > 0).sort((a, b) => (b.current || 0) - (a.current || 0));
+      const catTotalInv = catRows.reduce((s, r) => s + (r.invested || 0), 0);
+      const catTotalCur = catRows.reduce((s, r) => s + (r.current || 0), 0);
 
-  let catBody = catRows.length === 0
-    ? `<tr><td colspan="5" style="text-align:center;padding:2rem;color:rgba(15,17,23,.35);font-size:.82rem">No sub-category data available</td></tr>`
-    : catRows.map((r, i) => {
-        const pct = (r.allocation || 0);
-        const cagr = r.cagr || 0;
-        const color = COLORS[i % COLORS.length];
-        const gain = (r.current || 0) - (r.invested || 0);
-        const gainPct = r.invested ? (gain / r.invested * 100) : 0;
-        return `<tr style="border-bottom:1px solid rgba(15,17,23,.04)">
+      let catBody = catRows.length === 0
+        ? `<tr><td colspan="5" style="text-align:center;padding:2rem;color:rgba(15,17,23,.35);font-size:.82rem">No sub-category data available</td></tr>`
+        : catRows.map((r, i) => {
+          const pct = (r.allocation || 0);
+          const cagr = r.cagr || 0;
+          const color = COLORS[i % COLORS.length];
+          const gain = (r.current || 0) - (r.invested || 0);
+          const gainPct = r.invested ? (gain / r.invested * 100) : 0;
+          return `<tr style="border-bottom:1px solid rgba(15,17,23,.04)">
           <td style="padding:.65rem .85rem">
             <div style="display:flex;align-items:center;gap:.5rem">
               <span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;display:inline-block"></span>
@@ -971,32 +1932,32 @@ function renderConsolidated(m, isAll) {
           </td>
           <td style="padding:.65rem .85rem;text-align:right;font-family:'DM Sans',sans-serif;font-weight:500;font-size:.82rem;color:var(--ink)">${fmt(r.invested)}</td>
           <td style="padding:.65rem .85rem;text-align:right;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.82rem;color:var(--ink)">${fmt(r.current)}</td>
-          <td style="padding:.65rem .85rem;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem;color:${gainPct>=0?'var(--green-l)':'var(--coral)'}">${gainPct>=0?'+':''}${gainPct.toFixed(1)}%</td>
+          <td style="padding:.65rem .85rem;text-align:right;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.78rem;color:${gainPct >= 0 ? 'var(--green-l)' : 'var(--coral)'}">${gainPct >= 0 ? '+' : ''}${gainPct.toFixed(1)}%</td>
           <td style="padding:.65rem .85rem">
             <div style="display:flex;align-items:center;gap:.4rem;justify-content:flex-end">
               <div style="width:60px;height:4px;background:rgba(15,17,23,.06);border-radius:4px;overflow:hidden">
-                <div style="height:100%;width:${Math.min(pct,100).toFixed(1)}%;background:${color};border-radius:4px"></div>
+                <div style="height:100%;width:${Math.min(pct, 100).toFixed(1)}%;background:${color};border-radius:4px"></div>
               </div>
-              <span style="font-family:'DM Mono',monospace;font-size:.72rem;color:rgba(15,17,23,.5);min-width:38px;text-align:right">${pct.toFixed(1)}%</span>
+              <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:.72rem;color:rgba(15,17,23,.5);min-width:38px;text-align:right">${pct.toFixed(1)}%</span>
             </div>
           </td>
         </tr>`;
-      }).join('');
+        }).join('');
 
-  const catFooter = catRows.length > 0 ? `
+      const catFooter = catRows.length > 0 ? `
     <tfoot>
       <tr style="background:rgba(26,92,74,.05)">
         <td style="font-weight:700;font-size:.82rem;padding:.75rem .85rem">Total</td>
         <td style="text-align:right;font-family:'DM Sans',sans-serif;font-weight:600;padding:.75rem .85rem">${fmt(catTotalInv)}</td>
         <td style="text-align:right;font-family:'DM Sans',sans-serif;font-weight:700;color:var(--green-l);padding:.75rem .85rem">${fmt(catTotalCur)}</td>
         <td style="text-align:right;font-family:'DM Sans',sans-serif;font-weight:700;color:var(--green-l);padding:.75rem .85rem">
-          ${catTotalInv > 0 ? (((catTotalCur-catTotalInv)/catTotalInv)*100).toFixed(1)+'%' : '—'}
+          ${catTotalInv > 0 ? (((catTotalCur - catTotalInv) / catTotalInv) * 100).toFixed(1) + '%' : '—'}
         </td>
         <td style="text-align:right;font-family:'DM Sans',sans-serif;font-weight:700;padding:.75rem .85rem">100%</td>
       </tr>
     </tfoot>` : '';
 
-  const catSection = `
+      const catSection = `
     <div class="consol-box">
       <div class="consol-hdr">📊 &nbsp;Sub-Category Breakdown</div>
       <table style="width:100%;border-collapse:collapse">
@@ -1014,100 +1975,100 @@ function renderConsolidated(m, isAll) {
       </table>
     </div>`;
 
-  // ── AMC & CATEGORY detection from fund name ──
-  function detectAMC(name) {
-    const n = (name || '').toLowerCase();
-    if (n.includes('sbi')) return 'SBI Mutual Fund';
-    if (n.includes('axis')) return 'Axis Mutual Fund';
-    if (n.includes('icici')) return 'ICICI Prudential MF';
-    if (n.includes('hdfc')) return 'HDFC Mutual Fund';
-    if (n.includes('kotak')) return 'Kotak Mutual Fund';
-    if (n.includes('dsp')) return 'DSP Mutual Fund';
-    if (n.includes('aditya birla') || n.includes('ab sl') || n.includes('absl')) return 'Aditya Birla Sun Life MF';
-    if (n.includes('nippon')) return 'Nippon India MF';
-    if (n.includes('mirae')) return 'Mirae Asset MF';
-    if (n.includes('franklin')) return 'Franklin Templeton MF';
-    if (n.includes('tata')) return 'Tata Mutual Fund';
-    if (n.includes('uti')) return 'UTI Mutual Fund';
-    if (n.includes('pgim')) return 'PGIM India MF';
-    if (n.includes('sundaram')) return 'Sundaram MF';
-    if (n.includes('bandhan')) return 'Bandhan MF';
-    if (n.includes('parag parikh') || n.includes('ppfas')) return 'PPFAS MF';
-    if (n.includes('motilal')) return 'Motilal Oswal MF';
-    if (n.includes('invesco')) return 'Invesco MF';
-    if (n.includes('l&t') || n.includes('l and t')) return 'L&T MF';
-    if (n.includes('canara')) return 'Canara Robeco MF';
-    if (n.includes('edelweiss')) return 'Edelweiss MF';
-    if (n.includes('whiteoak')) return 'WhiteOak MF';
-    if (n.includes('quant')) return 'Quant MF';
-    if (n.includes('jm')) return 'JM Financial MF';
-    if (n.includes('navi')) return 'Navi MF';
-    if (n.includes('360 one') || n.includes('360one')) return '360 ONE MF';
-    if (n.includes('groww')) return 'Groww MF';
-    return 'Other';
-  }
+      // ── AMC & CATEGORY detection from fund name ──
+      function detectAMC(name) {
+        const n = (name || '').toLowerCase();
+        if (n.includes('sbi')) return 'SBI Mutual Fund';
+        if (n.includes('axis')) return 'Axis Mutual Fund';
+        if (n.includes('icici')) return 'ICICI Prudential MF';
+        if (n.includes('hdfc')) return 'HDFC Mutual Fund';
+        if (n.includes('kotak')) return 'Kotak Mutual Fund';
+        if (n.includes('dsp')) return 'DSP Mutual Fund';
+        if (n.includes('aditya birla') || n.includes('ab sl') || n.includes('absl')) return 'Aditya Birla Sun Life MF';
+        if (n.includes('nippon')) return 'Nippon India MF';
+        if (n.includes('mirae')) return 'Mirae Asset MF';
+        if (n.includes('franklin')) return 'Franklin Templeton MF';
+        if (n.includes('tata')) return 'Tata Mutual Fund';
+        if (n.includes('uti')) return 'UTI Mutual Fund';
+        if (n.includes('pgim')) return 'PGIM India MF';
+        if (n.includes('sundaram')) return 'Sundaram MF';
+        if (n.includes('bandhan')) return 'Bandhan MF';
+        if (n.includes('parag parikh') || n.includes('ppfas')) return 'PPFAS MF';
+        if (n.includes('motilal')) return 'Motilal Oswal MF';
+        if (n.includes('invesco')) return 'Invesco MF';
+        if (n.includes('l&t') || n.includes('l and t')) return 'L&T MF';
+        if (n.includes('canara')) return 'Canara Robeco MF';
+        if (n.includes('edelweiss')) return 'Edelweiss MF';
+        if (n.includes('whiteoak')) return 'WhiteOak MF';
+        if (n.includes('quant')) return 'Quant MF';
+        if (n.includes('jm')) return 'JM Financial MF';
+        if (n.includes('navi')) return 'Navi MF';
+        if (n.includes('360 one') || n.includes('360one')) return '360 ONE MF';
+        if (n.includes('groww')) return 'Groww MF';
+        return 'Other';
+      }
 
-  function detectCategory(name) {
-    const n = (name || '').toLowerCase();
-    if (n.includes('large & mid') || n.includes('large and mid') || n.includes('large & midcap')) return 'Large & Mid Cap';
-    if (n.includes('mid cap') || n.includes('midcap')) return 'Mid Cap';
-    if (n.includes('small cap') || n.includes('smallcap')) return 'Small Cap';
-    if (n.includes('multi cap') || n.includes('multicap')) return 'Multi Cap';
-    if (n.includes('flexi cap') || n.includes('flexicap') || n.includes('flexi-cap')) return 'Flexi Cap';
-    if (n.includes('large cap') || n.includes('largecap')) return 'Large Cap';
-    if (n.includes('elss') || n.includes('tax saver') || n.includes('tax saving') || n.includes('long term equity')) return 'ELSS';
-    if (n.includes('nifty') || n.includes('sensex') || n.includes('index') || n.includes('bse')) return 'Index';
-    if (n.includes('multi asset')) return 'Multi Asset';
-    if (n.includes('balanced advantage') || n.includes('baf')) return 'Balanced Advantage';
-    if (n.includes('hybrid') || n.includes('balanced') || n.includes('conservative hybrid') || n.includes('aggressive hybrid')) return 'Hybrid';
-    if (n.includes('focused')) return 'Focused';
-    if (n.includes('value') || n.includes('contra')) return 'Value/Contra';
-    if (n.includes('liquid') || n.includes('overnight') || n.includes('money market')) return 'Liquid';
-    if (n.includes('arbitrage')) return 'Arbitrage';
-    if (n.includes('dynamic bond') || n.includes('gilt') || n.includes('g-sec')) return 'Dynamic Bond/Gilt';
-    if (n.includes('short duration') || n.includes('short term')) return 'Short Duration';
-    if (n.includes('corporate bond') || n.includes('credit risk')) return 'Corporate Bond';
-    if (n.includes('ultra short') || n.includes('low duration')) return 'Ultra Short/Low Duration';
-    if (n.includes('bond') || n.includes('debt') || n.includes('income') || n.includes('fixed')) return 'Debt';
-    if (n.includes('savings') || n.includes('regular savings')) return 'Savings';
-    if (n.includes('gold') || n.includes('commodity')) return 'Gold/Commodity';
-    return 'Other';
-  }
+      function detectCategory(name) {
+        const n = (name || '').toLowerCase();
+        if (n.includes('large & mid') || n.includes('large and mid') || n.includes('large & midcap')) return 'Large & Mid Cap';
+        if (n.includes('mid cap') || n.includes('midcap')) return 'Mid Cap';
+        if (n.includes('small cap') || n.includes('smallcap')) return 'Small Cap';
+        if (n.includes('multi cap') || n.includes('multicap')) return 'Multi Cap';
+        if (n.includes('flexi cap') || n.includes('flexicap') || n.includes('flexi-cap')) return 'Flexi Cap';
+        if (n.includes('large cap') || n.includes('largecap')) return 'Large Cap';
+        if (n.includes('elss') || n.includes('tax saver') || n.includes('tax saving') || n.includes('long term equity')) return 'ELSS';
+        if (n.includes('nifty') || n.includes('sensex') || n.includes('index') || n.includes('bse')) return 'Index';
+        if (n.includes('multi asset')) return 'Multi Asset';
+        if (n.includes('balanced advantage') || n.includes('baf')) return 'Balanced Advantage';
+        if (n.includes('hybrid') || n.includes('balanced') || n.includes('conservative hybrid') || n.includes('aggressive hybrid')) return 'Hybrid';
+        if (n.includes('focused')) return 'Focused';
+        if (n.includes('value') || n.includes('contra')) return 'Value/Contra';
+        if (n.includes('liquid') || n.includes('overnight') || n.includes('money market')) return 'Liquid';
+        if (n.includes('arbitrage')) return 'Arbitrage';
+        if (n.includes('dynamic bond') || n.includes('gilt') || n.includes('g-sec')) return 'Dynamic Bond/Gilt';
+        if (n.includes('short duration') || n.includes('short term')) return 'Short Duration';
+        if (n.includes('corporate bond') || n.includes('credit risk')) return 'Corporate Bond';
+        if (n.includes('ultra short') || n.includes('low duration')) return 'Ultra Short/Low Duration';
+        if (n.includes('bond') || n.includes('debt') || n.includes('income') || n.includes('fixed')) return 'Debt';
+        if (n.includes('savings') || n.includes('regular savings')) return 'Savings';
+        if (n.includes('gold') || n.includes('commodity')) return 'Gold/Commodity';
+        return 'Other';
+      }
 
-  // ── SECTION 2: Category Wise SIP ──
-  const catSipMap = {};
-  sipRows.forEach(r => {
-    const cat = detectCategory(r.name);
-    if (!catSipMap[cat]) catSipMap[cat] = { cat, amount: 0 };
-    catSipMap[cat].amount += r.amount;
-  });
-  const catSipRows = Object.values(catSipMap).sort((a, b) => b.amount - a.amount);
+      // ── SECTION 2: Category Wise SIP ──
+      const catSipMap = {};
+      sipRows.forEach(r => {
+        const cat = detectCategory(r.name);
+        if (!catSipMap[cat]) catSipMap[cat] = { cat, amount: 0 };
+        catSipMap[cat].amount += r.amount;
+      });
+      const catSipRows = Object.values(catSipMap).sort((a, b) => b.amount - a.amount);
 
-  const catSipBody = catSipRows.length === 0
-    ? `<tr><td colspan="3" style="text-align:center;padding:2rem;color:rgba(15,17,23,.35);font-size:.82rem">No data</td></tr>`
-    : catSipRows.map((r, i) => {
-        const pct = sipTotal > 0 ? (r.amount / sipTotal * 100) : 0;
-        const color = COLORS[i % COLORS.length];
-        return `<tr style="border-bottom:1px solid rgba(15,17,23,.04)">
+      const catSipBody = catSipRows.length === 0
+        ? `<tr><td colspan="3" style="text-align:center;padding:2rem;color:rgba(15,17,23,.35);font-size:.82rem">No data</td></tr>`
+        : catSipRows.map((r, i) => {
+          const pct = sipTotal > 0 ? (r.amount / sipTotal * 100) : 0;
+          const color = COLORS[i % COLORS.length];
+          return `<tr style="border-bottom:1px solid rgba(15,17,23,.04)">
           <td style="padding:.65rem .85rem">
             <div style="display:flex;align-items:center;gap:.5rem">
               <span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;display:inline-block"></span>
               <span style="font-weight:600;font-size:.82rem">${r.cat}</span>
             </div>
           </td>
-          <td style="padding:.65rem .85rem;text-align:right;font-family:'DM Mono',monospace;font-weight:600;font-size:.78rem">₹${r.amount.toLocaleString('en-IN')}</td>
+          <td style="padding:.65rem .85rem;text-align:right;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.82rem;color:var(--ink)">₹${r.amount.toLocaleString('en-IN')}</td>
           <td style="padding:.65rem .85rem">
             <div style="display:flex;align-items:center;gap:.4rem;justify-content:flex-end">
               <div style="width:60px;height:4px;background:rgba(15,17,23,.06);border-radius:4px;overflow:hidden">
-                <div style="height:100%;width:${Math.min(pct,100).toFixed(1)}%;background:${color};border-radius:4px"></div>
+                <div style="height:100%;width:${Math.min(pct, 100).toFixed(1)}%;background:${color};border-radius:4px"></div>
               </div>
-              <span style="font-family:'DM Mono',monospace;font-size:.72rem;color:rgba(15,17,23,.5);min-width:38px;text-align:right">${pct.toFixed(1)}%</span>
+              <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:.72rem;color:rgba(15,17,23,.5);min-width:38px;text-align:right">${pct.toFixed(1)}%</span>
             </div>
           </td>
         </tr>`;
-      }).join('');
+        }).join('');
 
-  const catSipSection = `
+      const catSipSection = `
     <div class="consol-box" style="margin-top:1.2rem">
       <div class="consol-hdr">📂 &nbsp;Category Wise SIP Allocation</div>
       <table style="width:100%;border-collapse:collapse">
@@ -1122,47 +2083,47 @@ function renderConsolidated(m, isAll) {
         <tfoot>
           <tr style="background:rgba(26,92,74,.05);border-top:2px solid var(--border)">
             <td style="font-weight:700;font-size:.82rem;padding:.75rem .85rem">Total</td>
-            <td style="text-align:right;font-family:'DM Mono',monospace;font-weight:700;color:var(--green-l);font-size:.82rem;padding:.75rem .85rem">₹${sipTotal.toLocaleString('en-IN')}</td>
-            <td style="text-align:right;font-family:'DM Mono',monospace;font-weight:700;padding:.75rem .85rem">100%</td>
+            <td style="text-align:right;font-family:'DM Sans',sans-serif;font-weight:700;color:var(--green-l);padding:.75rem .85rem">₹${sipTotal.toLocaleString('en-IN')}</td>
+            <td style="text-align:right;font-family:'DM Sans',sans-serif;font-weight:700;padding:.75rem .85rem">100%</td>
           </tr>
         </tfoot>
       </table>
     </div>`;
 
-  // ── SECTION 3: AMC Wise SIP ──
-  const amcSipMap = {};
-  sipRows.forEach(r => {
-    const amc = detectAMC(r.name);
-    if (!amcSipMap[amc]) amcSipMap[amc] = { amc, amount: 0 };
-    amcSipMap[amc].amount += r.amount;
-  });
-  const amcSipRows = Object.values(amcSipMap).sort((a, b) => b.amount - a.amount);
+      // ── SECTION 3: AMC Wise SIP ──
+      const amcSipMap = {};
+      sipRows.forEach(r => {
+        const amc = detectAMC(r.name);
+        if (!amcSipMap[amc]) amcSipMap[amc] = { amc, amount: 0 };
+        amcSipMap[amc].amount += r.amount;
+      });
+      const amcSipRows = Object.values(amcSipMap).sort((a, b) => b.amount - a.amount);
 
-  const amcSipBody = amcSipRows.length === 0
-    ? `<tr><td colspan="3" style="text-align:center;padding:2rem;color:rgba(15,17,23,.35);font-size:.82rem">No data</td></tr>`
-    : amcSipRows.map((r, i) => {
-        const pct = sipTotal > 0 ? (r.amount / sipTotal * 100) : 0;
-        const color = COLORS[i % COLORS.length];
-        return `<tr style="border-bottom:1px solid rgba(15,17,23,.04)">
+      const amcSipBody = amcSipRows.length === 0
+        ? `<tr><td colspan="3" style="text-align:center;padding:2rem;color:rgba(15,17,23,.35);font-size:.82rem">No data</td></tr>`
+        : amcSipRows.map((r, i) => {
+          const pct = sipTotal > 0 ? (r.amount / sipTotal * 100) : 0;
+          const color = COLORS[i % COLORS.length];
+          return `<tr style="border-bottom:1px solid rgba(15,17,23,.04)">
           <td style="padding:.65rem .85rem">
             <div style="display:flex;align-items:center;gap:.5rem">
               <span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;display:inline-block"></span>
               <span style="font-weight:600;font-size:.82rem">${r.amc}</span>
             </div>
           </td>
-          <td style="padding:.65rem .85rem;text-align:right;font-family:'DM Mono',monospace;font-weight:600;font-size:.78rem">₹${r.amount.toLocaleString('en-IN')}</td>
+          <td style="padding:.65rem .85rem;text-align:right;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.82rem;color:var(--ink)">₹${r.amount.toLocaleString('en-IN')}</td>
           <td style="padding:.65rem .85rem">
             <div style="display:flex;align-items:center;gap:.4rem;justify-content:flex-end">
               <div style="width:60px;height:4px;background:rgba(15,17,23,.06);border-radius:4px;overflow:hidden">
-                <div style="height:100%;width:${Math.min(pct,100).toFixed(1)}%;background:${color};border-radius:4px"></div>
+                <div style="height:100%;width:${Math.min(pct, 100).toFixed(1)}%;background:${color};border-radius:4px"></div>
               </div>
-              <span style="font-family:'DM Mono',monospace;font-size:.72rem;color:rgba(15,17,23,.5);min-width:38px;text-align:right">${pct.toFixed(1)}%</span>
+              <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:.72rem;color:rgba(15,17,23,.5);min-width:38px;text-align:right">${pct.toFixed(1)}%</span>
             </div>
           </td>
         </tr>`;
-      }).join('');
+        }).join('');
 
-  const amcSipSection = `
+      const amcSipSection = `
     <div class="consol-box" style="margin-top:1.2rem">
       <div class="consol-hdr">🏦 &nbsp;AMC Wise SIP Allocation</div>
       <table style="width:100%;border-collapse:collapse">
@@ -1177,44 +2138,44 @@ function renderConsolidated(m, isAll) {
         <tfoot>
           <tr style="background:rgba(26,92,74,.05);border-top:2px solid var(--border)">
             <td style="font-weight:700;font-size:.82rem;padding:.75rem .85rem">Total</td>
-            <td style="text-align:right;font-family:'DM Mono',monospace;font-weight:700;color:var(--green-l);font-size:.82rem;padding:.75rem .85rem">₹${sipTotal.toLocaleString('en-IN')}</td>
-            <td style="text-align:right;font-family:'DM Mono',monospace;font-weight:700;padding:.75rem .85rem">100%</td>
+            <td style="text-align:right;font-family:'DM Sans',sans-serif;font-weight:700;color:var(--green-l);padding:.75rem .85rem">₹${sipTotal.toLocaleString('en-IN')}</td>
+            <td style="text-align:right;font-family:'DM Sans',sans-serif;font-weight:700;padding:.75rem .85rem">100%</td>
           </tr>
         </tfoot>
       </table>
     </div>`;
 
-  // ── AMC Wise Allocation from amcAllocation field ──
-  const amcAllocRows = (currentData.amcAllocation || []).slice().sort((a, b) => (b.allocation || 0) - (a.allocation || 0));
-  const amcAllocTotalInv = amcAllocRows.reduce((s, r) => s + (r.invested || 0), 0);
-  const amcAllocTotalCur = amcAllocRows.reduce((s, r) => s + (r.current || 0), 0);
+      // ── AMC Wise Allocation from amcAllocation field ──
+      const amcAllocRows = (currentData.amcAllocation || []).slice().sort((a, b) => (b.allocation || 0) - (a.allocation || 0));
+      const amcAllocTotalInv = amcAllocRows.reduce((s, r) => s + (r.invested || 0), 0);
+      const amcAllocTotalCur = amcAllocRows.reduce((s, r) => s + (r.current || 0), 0);
 
-  const amcAllocBody = amcAllocRows.length === 0
-    ? `<tr><td colspan="4" style="text-align:center;padding:2rem;color:rgba(15,17,23,.35);font-size:.82rem">No AMC data available</td></tr>`
-    : amcAllocRows.map((r, i) => {
-        const pct = (r.allocation || 0);
-        const color = COLORS[i % COLORS.length];
-        return `<tr style="border-bottom:1px solid rgba(15,17,23,.04)">
+      const amcAllocBody = amcAllocRows.length === 0
+        ? `<tr><td colspan="4" style="text-align:center;padding:2rem;color:rgba(15,17,23,.35);font-size:.82rem">No AMC data available</td></tr>`
+        : amcAllocRows.map((r, i) => {
+          const pct = (r.allocation || 0);
+          const color = COLORS[i % COLORS.length];
+          return `<tr style="border-bottom:1px solid rgba(15,17,23,.04)">
           <td style="padding:.65rem .85rem">
             <div style="display:flex;align-items:center;gap:.5rem">
               <span style="width:8px;height:8px;border-radius:50%;background:${color};flex-shrink:0;display:inline-block"></span>
               <span style="font-weight:600;font-size:.82rem">${r.amc}</span>
             </div>
           </td>
-          <td style="padding:.65rem .85rem;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem">${fmt(r.invested)}</td>
-          <td style="padding:.65rem .85rem;text-align:right;font-family:'DM Mono',monospace;font-weight:600;font-size:.78rem">${fmt(r.current)}</td>
+          <td style="padding:.65rem .85rem;text-align:right;font-family:'DM Sans',sans-serif;font-weight:500;font-size:.82rem;color:var(--ink)">${fmt(r.invested)}</td>
+          <td style="padding:.65rem .85rem;text-align:right;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.82rem;color:var(--ink)">${fmt(r.current)}</td>
           <td style="padding:.65rem .85rem">
             <div style="display:flex;align-items:center;gap:.4rem;justify-content:flex-end">
               <div style="width:60px;height:4px;background:rgba(15,17,23,.06);border-radius:4px;overflow:hidden">
-                <div style="height:100%;width:${Math.min(pct,100).toFixed(1)}%;background:${color};border-radius:4px"></div>
+                <div style="height:100%;width:${Math.min(pct, 100).toFixed(1)}%;background:${color};border-radius:4px"></div>
               </div>
-              <span style="font-family:'DM Mono',monospace;font-size:.72rem;color:rgba(15,17,23,.5);min-width:38px;text-align:right">${pct.toFixed(1)}%</span>
+              <span style="font-family:'DM Sans',sans-serif;font-weight:600;font-size:.72rem;color:rgba(15,17,23,.5);min-width:38px;text-align:right">${pct.toFixed(1)}%</span>
             </div>
           </td>
         </tr>`;
-      }).join('');
+        }).join('');
 
-  const amcAllocSection = `
+      const amcAllocSection = `
     <div class="consol-box">
       <div class="consol-hdr">🏦 &nbsp;AMC Wise Allocation</div>
       <table style="width:100%;border-collapse:collapse">
@@ -1230,113 +2191,114 @@ function renderConsolidated(m, isAll) {
         <tfoot>
           <tr style="background:rgba(26,92,74,.05);border-top:2px solid var(--border)">
             <td style="font-weight:700;font-size:.82rem;padding:.75rem .85rem">Total</td>
-            <td style="text-align:right;font-family:'DM Mono',monospace;font-weight:600;padding:.75rem .85rem">${fmt(amcAllocTotalInv)}</td>
-            <td style="text-align:right;font-family:'DM Mono',monospace;font-weight:700;color:var(--green-l);padding:.75rem .85rem">${fmt(amcAllocTotalCur)}</td>
-            <td style="text-align:right;font-family:'DM Mono',monospace;font-weight:700;padding:.75rem .85rem">100%</td>
+            <td style="text-align:right;font-family:'DM Sans',sans-serif;font-weight:600;padding:.75rem .85rem">${fmt(amcAllocTotalInv)}</td>
+            <td style="text-align:right;font-family:'DM Sans',sans-serif;font-weight:700;color:var(--green-l);padding:.75rem .85rem">${fmt(amcAllocTotalCur)}</td>
+            <td style="text-align:right;font-family:'DM Sans',sans-serif;font-weight:700;padding:.75rem .85rem">100%</td>
           </tr>
         </tfoot>
       </table>
     </div>`;
 
-  wrap.innerHTML = `
+      wrap.innerHTML = `
     <div class="sec-ttl"><span class="dot"></span>Consolidated Overview</div>
     <div class="consol-grid">${amcAllocSection}${catSection}</div>
     <div class="consol-grid" style="margin-top:1.2rem">${sipSection}
       <div style="display:flex;flex-direction:column;gap:1.2rem">${catSipSection}${amcSipSection}</div>
     </div>`;
-}
+    }
 
-// UNWANTED SCHEMES — global list persists across tabs and uploads
-let unwantedSchemes = [];
+    // UNWANTED SCHEMES — global list persists across tabs and uploads
+    let unwantedSchemes = [];
 
-function addUnwanted() {
-  const input = qs('unwanted-input');
-  const val = (input.value || '').trim();
-  if (!val) return;
-  // avoid duplicates
-  if (!unwantedSchemes.some(s => s.toLowerCase() === val.toLowerCase())) {
-    unwantedSchemes.push(val);
-    renderUnwantedTags();
-    // re-render advisor notes for current tab
-    const idx = Array.from(document.querySelectorAll('.tab')).findIndex(t => t.classList.contains('on'));
-    if (idx >= 0 && currentData) renderSidebar(currentData.members[idx], idx === 0);
-  }
-  input.value = '';
-  input.focus();
-}
+    function addUnwanted() {
+      const input = qs('unwanted-input');
+      const val = (input.value || '').trim();
+      if (!val) return;
+      // avoid duplicates
+      if (!unwantedSchemes.some(s => s.toLowerCase() === val.toLowerCase())) {
+        unwantedSchemes.push(val);
+        renderUnwantedTags();
+        // re-render advisor notes for current tab
+        const idx = Array.from(document.querySelectorAll('.tab')).findIndex(t => t.classList.contains('on'));
+        if (idx >= 0 && currentData) renderSidebar(currentData.members[idx], idx === 0);
+      }
+      input.value = '';
+      input.focus();
+    }
 
-function removeUnwanted(name) {
-  unwantedSchemes = unwantedSchemes.filter(s => s !== name);
-  renderUnwantedTags();
-  const idx = Array.from(document.querySelectorAll('.tab')).findIndex(t => t.classList.contains('on'));
-  if (idx >= 0 && currentData) renderSidebar(currentData.members[idx], idx === 0);
-}
+    function removeUnwanted(name) {
+      unwantedSchemes = unwantedSchemes.filter(s => s !== name);
+      renderUnwantedTags();
+      const idx = Array.from(document.querySelectorAll('.tab')).findIndex(t => t.classList.contains('on'));
+      if (idx >= 0 && currentData) renderSidebar(currentData.members[idx], idx === 0);
+    }
 
-function renderUnwantedTags() {
-  const wrap = qs('unwanted-tags');
-  if (!wrap) return;
-  wrap.innerHTML = unwantedSchemes.length === 0
-    ? ''
-    : unwantedSchemes.map(s =>
-        `<span class="tag">${s}<button class="tag-rm" onclick="removeUnwanted('${s.replace(/'/g,"\'")}')">×</button></span>`
-      ).join('');
-}
+    function renderUnwantedTags() {
+      const wrap = qs('unwanted-tags');
+      if (!wrap) return;
+      wrap.innerHTML = unwantedSchemes.length === 0
+        ? ''
+        : unwantedSchemes.map(s =>
+          `<span class="tag">${s}<button class="tag-rm" onclick="removeUnwanted('${s.replace(/'/g, "\'")}')">×</button></span>`
+        ).join('');
+    }
 
-// SCHEME SEARCH
-function searchScheme(query) {
-  const resultsEl = qs('search-results');
-  if (!query || query.trim().length < 2) {
-    resultsEl.innerHTML = '<span style="color:rgba(15,17,23,.4)">Type to search schemes in this portfolio</span>';
-    return;
-  }
-  const q = query.trim().toLowerCase();
-  const currentMemberData = currentData.members[document.querySelectorAll('.tab.on')[0] ? Array.from(document.querySelectorAll('.tab')).findIndex(t => t.classList.contains('on')) : 0];
-  const holdings = (currentMemberData || {}).holdings || [];
-  const matches = holdings.filter(h => (h.name || '').toLowerCase().includes(q));
-  if (matches.length === 0) {
-    resultsEl.innerHTML = '<span style="color:var(--coral)">No scheme found matching "' + query + '"</span>';
-    return;
-  }
-  const total = holdings.reduce((s, h) => s + (h.current || 0), 0) || 1;
-  resultsEl.innerHTML = matches.map(h => {
-    const g = (h.current || 0) - (h.invested || 0);
-    const gp = h.invested ? (g / h.invested * 100).toFixed(1) : '0';
-    const al = ((h.current || 0) / total * 100).toFixed(1);
-    const col = h.badge === 'eq' ? 'var(--green)' : h.badge === 'dt' ? 'var(--sky)' : h.badge === 'hy' ? 'var(--violet)' : 'var(--gold)';
-    return `<div style="background:#fff;border:1px solid var(--border);border-radius:9px;padding:.8rem;margin-bottom:.5rem">
+    // SCHEME SEARCH
+    function searchScheme(query) {
+      const resultsEl = qs('search-results');
+      if (!query || query.trim().length < 2) {
+        resultsEl.innerHTML = '<span style="color:rgba(15,17,23,.4)">Type to search schemes in this portfolio</span>';
+        return;
+      }
+      const q = query.trim().toLowerCase();
+      const currentMemberData = currentData.members[document.querySelectorAll('.tab.on')[0] ? Array.from(document.querySelectorAll('.tab')).findIndex(t => t.classList.contains('on')) : 0];
+      const holdings = (currentMemberData || {}).holdings || [];
+      const matches = holdings.filter(h => (h.name || '').toLowerCase().includes(q));
+      if (matches.length === 0) {
+        resultsEl.innerHTML = '<span style="color:var(--coral)">No scheme found matching "' + query + '"</span>';
+        return;
+      }
+      const total = holdings.reduce((s, h) => s + (h.current || 0), 0) || 1;
+      resultsEl.innerHTML = matches.map(h => {
+        const g = (h.current || 0) - (h.invested || 0);
+        const gp = h.invested ? (g / h.invested * 100).toFixed(1) : '0';
+        const al = ((h.current || 0) / total * 100).toFixed(1);
+        const col = h.badge === 'eq' ? 'var(--green)' : h.badge === 'dt' ? 'var(--sky)' : h.badge === 'hy' ? 'var(--violet)' : 'var(--gold)';
+        return `<div style="background:#fff;border:1px solid var(--border);border-radius:9px;padding:.8rem;margin-bottom:.5rem">
       <div style="font-weight:600;font-size:.82rem;margin-bottom:.4rem;color:var(--ink)">${h.name}</div>
       ${h.holder ? `<div style="font-size:.68rem;color:rgba(15,17,23,.4);margin-bottom:.4rem">Holder: ${h.holder}</div>` : ''}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:.3rem;font-size:.75rem">
-        <div><span style="color:rgba(15,17,23,.4)">Invested</span><br><span style="font-family:'DM Mono',monospace;font-weight:600">${fmt(h.invested)}</span></div>
-        <div><span style="color:rgba(15,17,23,.4)">Current</span><br><span style="font-family:'DM Mono',monospace;font-weight:600;color:var(--green-l)">${fmt(h.current)}</span></div>
-        <div><span style="color:rgba(15,17,23,.4)">Gain</span><br><span style="font-family:'DM Mono',monospace;font-weight:600;color:${g>=0?'var(--green-l)':'var(--coral)'}">${g>=0?'+':''}${gp}%</span></div>
-        <div><span style="color:rgba(15,17,23,.4)">CAGR</span><br><span style="font-family:'DM Mono',monospace;font-weight:600;color:${(h.xirr||0)>=0?'var(--green-l)':'var(--coral)'}">${(h.xirr||0).toFixed(2)}%</span></div>
-        <div><span style="color:rgba(15,17,23,.4)">Allocation</span><br><span style="font-family:'DM Mono',monospace;font-weight:600">${al}%</span></div>
-        <div><span style="color:rgba(15,17,23,.4)">Category</span><br><span style="font-size:.72rem;background:rgba(15,17,23,.07);padding:1px 6px;border-radius:10px;color:${col}">${h.cat||'—'}</span></div>
+        <div><span style="color:rgba(15,17,23,.4)">Invested</span><br><span style="font-family:'DM Sans',sans-serif;font-weight:500;color:var(--ink)">${fmt(h.invested)}</span></div>
+        <div><span style="color:rgba(15,17,23,.4)">Current</span><br><span style="font-family:'DM Sans',sans-serif;font-weight:600;color:var(--green-l)">${fmt(h.current)}</span></div>
+        <div><span style="color:rgba(15,17,23,.4)">Gain</span><br><span style="font-family:'DM Sans',sans-serif;font-weight:600;color:${g >= 0 ? 'var(--green-l)' : 'var(--coral)'}">${g >= 0 ? '+' : ''}${gp}%</span></div>
+        <div><span style="color:rgba(15,17,23,.4)">CAGR</span><br><span style="font-family:'DM Sans',sans-serif;font-weight:600;color:${(h.xirr || 0) >= 0 ? 'var(--green-l)' : 'var(--coral)'}">${(h.xirr || 0).toFixed(2)}%</span></div>
+        <div><span style="color:rgba(15,17,23,.4)">Allocation</span><br><span style="font-family:'DM Sans',sans-serif;font-weight:600">${al}%</span></div>
+        <div><span style="color:rgba(15,17,23,.4)">Category</span><br><span style="font-size:.72rem;background:rgba(15,17,23,.07);padding:1px 6px;border-radius:10px;color:${col}">${h.cat || '—'}</span></div>
       </div>
     </div>`;
-  }).join('');
-}
+      }).join('');
+    }
 
-// EVENTS
-document.querySelector('.browse-btn').addEventListener('click', e => { e.stopPropagation(); qs('file-in').click(); });
-qs('file-in').addEventListener('change', e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = ''; });
-qs('drop-zone').addEventListener('click', () => qs('file-in').click());
-qs('drop-zone').addEventListener('dragover', e => { e.preventDefault(); qs('drop-zone').classList.add('over'); });
-qs('drop-zone').addEventListener('dragleave', () => qs('drop-zone').classList.remove('over'));
-qs('drop-zone').addEventListener('drop', e => {
-  e.preventDefault(); qs('drop-zone').classList.remove('over');
-  const f = e.dataTransfer.files?.[0]; if (f) handleFile(f);
-});
-qs('btn-new').addEventListener('click', () => {
-  Object.values(charts).forEach(c => c?.destroy());
-  qs('dash-page').style.display = 'none';
-  qs('upload-page').style.display = 'flex';
-  qs('pw').style.display = 'none';
-  qs('steps-el').style.display = 'none';
-  qs('pf').style.width = '0%';
-  hideErr();
-});
-</script>
+    // EVENTS
+    document.querySelector('.browse-btn').addEventListener('click', e => { e.stopPropagation(); qs('file-in').click(); });
+    qs('file-in').addEventListener('change', e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = ''; });
+    qs('drop-zone').addEventListener('click', () => qs('file-in').click());
+    qs('drop-zone').addEventListener('dragover', e => { e.preventDefault(); qs('drop-zone').classList.add('over'); });
+    qs('drop-zone').addEventListener('dragleave', () => qs('drop-zone').classList.remove('over'));
+    qs('drop-zone').addEventListener('drop', e => {
+      e.preventDefault(); qs('drop-zone').classList.remove('over');
+      const f = e.dataTransfer.files?.[0]; if (f) handleFile(f);
+    });
+    qs('btn-new').addEventListener('click', () => {
+      Object.values(charts).forEach(c => c?.destroy());
+      qs('dash-page').style.display = 'none';
+      qs('upload-page').style.display = 'flex';
+      qs('pw').style.display = 'none';
+      qs('steps-el').style.display = 'none';
+      qs('pf').style.width = '0%';
+      hideErr();
+    });
+  </script>
 </body>
+
 </html>
