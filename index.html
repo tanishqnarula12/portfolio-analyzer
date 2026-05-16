@@ -77,13 +77,13 @@ header{background:#fff;padding:0 2rem;display:flex;align-items:center;justify-co
 .chart-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem}
 @media(max-width:600px){.chart-row{grid-template-columns:1fr}}
 .cbox{background:#fff;border:1px solid var(--border);border-radius:12px;padding:1.1rem}
-.clbl{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:rgba(15,17,23,.4);margin-bottom:.9rem}
+.clbl{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#4a5568;margin-bottom:.9rem}
 .cwrap{position:relative;height:170px;display:flex;align-items:center;justify-content:center}
 .bar-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:1.1rem;margin-bottom:1.5rem}
 
 /* TABLE */
 .tbl{width:100%;border-collapse:collapse;font-size:.82rem}
-.tbl thead th{text-align:left;padding:.65rem .7rem;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#fff;border-bottom:none;background:linear-gradient(135deg,#2e5b9f,#254b85)}
+.tbl thead th{text-align:left;padding:.65rem .7rem;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#fff;border-bottom:none;background:linear-gradient(135deg,#4b7bc4,#3261a8)}
 .tbl tbody td{padding:.7rem .7rem;border-bottom:1px solid rgba(15,17,23,.04);vertical-align:middle}
 .tbl tbody tr:hover{background:rgba(37,99,235,.04)}
 .fn{font-weight:600;font-size:.83rem}.fc{font-size:.68rem;color:rgba(15,17,23,.4);margin-top:1px}
@@ -128,10 +128,10 @@ header{background:#fff;padding:0 2rem;display:flex;align-items:center;justify-co
 .consol-cat-amc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.2rem!important}
 @media(max-width:700px){.consol-cat-amc-grid{grid-template-columns:1fr}}
 .consol-box{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.consol-hdr{padding:.8rem 1.1rem;background:linear-gradient(135deg,#2e5b9f,#254b85);border-bottom:none;font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#fff;display:flex;align-items:center;gap:.5rem;position:relative;overflow:hidden}
+.consol-hdr{padding:.8rem 1.1rem;background:linear-gradient(135deg,#4b7bc4,#3261a8);border-bottom:none;font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#fff;display:flex;align-items:center;gap:.5rem;position:relative;overflow:hidden}
 .consol-hdr::after{content:'';position:absolute;top:0;right:0;width:80px;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.06));pointer-events:none}
 .ctbl{width:100%;border-collapse:collapse;font-size:.82rem}
-.ctbl thead th{text-align:left;padding:.55rem .85rem;font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(26,39,68,.55);border-bottom:2px solid rgba(37,99,235,.12);background:linear-gradient(135deg,rgba(37,99,235,.06),rgba(37,99,235,.02))}
+.ctbl thead th{text-align:left;padding:.55rem .85rem;font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#334155;border-bottom:2px solid rgba(37,99,235,.12);background:linear-gradient(135deg,rgba(37,99,235,.06),rgba(37,99,235,.02))}
 .ctbl tbody td{padding:.65rem .85rem;border-bottom:1px solid rgba(15,17,23,.04);vertical-align:middle}
 .ctbl tbody tr:last-child td{border-bottom:none}
 .ctbl tbody tr:hover{background:rgba(37,99,235,.04)}
@@ -249,7 +249,7 @@ header{background:#fff;padding:0 2rem;display:flex;align-items:center;justify-co
       <div style="margin-bottom:.8rem">
         <input id="scheme-search" type="text" placeholder="Search scheme name..." style="width:100%;padding:.6rem .85rem;border:1px solid var(--border);border-radius:8px;font:500 .82rem 'DM Sans',sans-serif;color:var(--ink);background:#fff;outline:none;transition:.2s" onfocus="this.style.borderColor='var(--green-l)'" onblur="this.style.borderColor='var(--border)'" oninput="searchScheme(this.value)">
       </div>
-      <div id="search-results" style="font-size:.8rem;color:rgba(15,17,23,.4)">Type to search schemes in this portfolio</div>
+      <div id="search-results" style="font-size:.8rem;color:#4a5568">Type to search schemes in this portfolio</div>
       <div class="divider"></div>
       <div class="sec-ttl" style="font-size:.88rem"><span class="dot"></span>Schemes We Don't Want</div>
       <div class="unwanted-input-row">
@@ -257,7 +257,7 @@ header{background:#fff;padding:0 2rem;display:flex;align-items:center;justify-co
         <button onclick="addUnwanted()">+ Add</button>
       </div>
       <div class="tag-wrap" id="unwanted-tags"></div>
-      <div style="font-size:.74rem;color:rgba(15,17,23,.35);margin-top:.5rem">Added funds will appear as warnings in Advisor Notes if found in portfolio</div>
+      <div style="font-size:.74rem;color:#4a5568;margin-top:.5rem">Added funds will appear as warnings in Advisor Notes if found in portfolio</div>
       <div class="divider"></div>
       <div class="advisor-section-title" style="font-size:.88rem"><span class="dot"></span><span style="font-family:'Playfair Display',serif;font-weight:700">Advisor Notes</span><span class="alert-count" id="alert-count" style="display:none">0</span></div>
       <div id="alert-list"></div>
