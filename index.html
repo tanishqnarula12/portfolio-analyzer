@@ -1911,7 +1911,25 @@ Return this exact JSON structure:
     </div>`;
 
       // ── SUB-CATEGORY from subCategories field ──
-      const catRows = (currentData.subCategories || []).filter(r => (r.allocation || 0) > 0).sort((a, b) => (b.current || 0) - (a.current || 0));
+      let catRows = (currentData.subCategories || []).filter(r => (r.allocation || 0) > 0);
+      if (catRows.length === 0) {
+        const catMap = {};
+        let totalCur = 0;
+        (currentData.members || []).forEach(m => {
+          (m.holdings || []).forEach(h => {
+            const cat = h.cat || detectCategory(h.name);
+            if (!catMap[cat]) catMap[cat] = { cat, invested: 0, current: 0 };
+            catMap[cat].invested += (h.invested || 0);
+            catMap[cat].current += (h.current || 0);
+            totalCur += (h.current || 0);
+          });
+        });
+        catRows = Object.values(catMap).map(c => {
+          c.allocation = totalCur > 0 ? (c.current / totalCur * 100) : 0;
+          return c;
+        });
+      }
+      catRows = catRows.sort((a, b) => (b.current || 0) - (a.current || 0));
       const catTotalInv = catRows.reduce((s, r) => s + (r.invested || 0), 0);
       const catTotalCur = catRows.reduce((s, r) => s + (r.current || 0), 0);
 
@@ -2146,7 +2164,25 @@ Return this exact JSON structure:
     </div>`;
 
       // ── AMC Wise Allocation from amcAllocation field ──
-      const amcAllocRows = (currentData.amcAllocation || []).slice().sort((a, b) => (b.allocation || 0) - (a.allocation || 0));
+      let amcAllocRows = (currentData.amcAllocation || []).slice();
+      if (amcAllocRows.length === 0) {
+        const amcMap = {};
+        let totalCur = 0;
+        (currentData.members || []).forEach(m => {
+          (m.holdings || []).forEach(h => {
+            const amc = detectAMC(h.name);
+            if (!amcMap[amc]) amcMap[amc] = { amc, invested: 0, current: 0 };
+            amcMap[amc].invested += (h.invested || 0);
+            amcMap[amc].current += (h.current || 0);
+            totalCur += (h.current || 0);
+          });
+        });
+        amcAllocRows = Object.values(amcMap).map(a => {
+          a.allocation = totalCur > 0 ? (a.current / totalCur * 100) : 0;
+          return a;
+        });
+      }
+      amcAllocRows = amcAllocRows.sort((a, b) => (b.allocation || 0) - (a.allocation || 0));
       const amcAllocTotalInv = amcAllocRows.reduce((s, r) => s + (r.invested || 0), 0);
       const amcAllocTotalCur = amcAllocRows.reduce((s, r) => s + (r.current || 0), 0);
 
