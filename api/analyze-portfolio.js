@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -153,7 +153,7 @@ Return this exact JSON structure:
 }`;
 
   try {
-    const response = await fetch(\`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=\${apiKey}\`, {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -166,7 +166,7 @@ Return this exact JSON structure:
           role: 'user',
           parts: [
             { inlineData: { mimeType: 'application/pdf', data: b64 } },
-            { text: \`Filename: "\${filename}". Extract all data from this portfolio statement and return the JSON.\` }
+            { text: `Filename: "${filename}". Extract all data from this portfolio statement and return the JSON.` }
           ]
         }],
         generationConfig: {
@@ -189,4 +189,4 @@ Return this exact JSON structure:
     console.error('Gemini API Error:', error);
     res.status(500).json({ error: 'Failed to process PDF with Gemini: ' + error.message });
   }
-}
+};
