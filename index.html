@@ -83,7 +83,7 @@ header{background:#fff;padding:0 2rem;display:flex;align-items:center;justify-co
 
 /* TABLE */
 .tbl{width:100%;border-collapse:collapse;font-size:.82rem}
-.tbl thead th{text-align:left;padding:.55rem .7rem;font-size:.67rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:rgba(26,39,68,.45);border-bottom:1px solid var(--border);background:var(--cream)}
+.tbl thead th{text-align:left;padding:.65rem .7rem;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#fff;border-bottom:none;background:linear-gradient(135deg,#1e3a5f,#1e40af)}
 .tbl tbody td{padding:.7rem .7rem;border-bottom:1px solid rgba(15,17,23,.04);vertical-align:middle}
 .tbl tbody tr:hover{background:rgba(37,99,235,.04)}
 .fn{font-weight:600;font-size:.83rem}.fc{font-size:.68rem;color:rgba(15,17,23,.4);margin-top:1px}
@@ -109,10 +109,15 @@ header{background:#fff;padding:0 2rem;display:flex;align-items:center;justify-co
 .gbar{height:5px;background:rgba(15,17,23,.06);border-radius:5px;overflow:hidden;margin-bottom:.35rem}
 .gfill{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue-l));border-radius:5px}
 .gmeta{display:flex;justify-content:space-between;font-size:.7rem;color:rgba(15,17,23,.38);font-family:'DM Sans',sans-serif}
-.alert-box{display:flex;gap:.65rem;padding:.8rem;border-radius:8px;margin-bottom:.55rem;font-size:.8rem;line-height:1.45}
-.alert-box.warn{background:rgba(224,92,69,.07);border:1px solid rgba(224,92,69,.15)}
-.alert-box.info{background:rgba(61,122,191,.07);border:1px solid rgba(61,122,191,.15)}
-.alert-box.ok{background:rgba(26,92,74,.07);border:1px solid rgba(26,92,74,.15)}
+.alert-box{display:flex;gap:.65rem;padding:.85rem 1rem;border-radius:10px;margin-bottom:.6rem;font-size:.8rem;line-height:1.5;border-left:4px solid transparent;position:relative;transition:transform .15s,box-shadow .15s}
+.alert-box:hover{transform:translateX(3px);box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.alert-box.warn{background:rgba(224,92,69,.08);border:1px solid rgba(224,92,69,.18);border-left:4px solid #e05c45;box-shadow:0 1px 6px rgba(224,92,69,.08)}
+.alert-box.info{background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.18);border-left:4px solid #3b82f6;box-shadow:0 1px 6px rgba(37,99,235,.08)}
+.alert-box.ok{background:rgba(26,92,74,.08);border:1px solid rgba(26,92,74,.18);border-left:4px solid #2d8a6e;box-shadow:0 1px 6px rgba(26,92,74,.08)}
+.advisor-section-title{background:linear-gradient(135deg,rgba(37,99,235,.1),rgba(37,99,235,.03));border:1px solid rgba(37,99,235,.15);border-radius:10px;padding:.7rem .9rem;margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem}
+.advisor-section-title .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);animation:pulse-dot 2s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.4)}50%{box-shadow:0 0 0 6px rgba(37,99,235,0)}}
+.alert-count{background:var(--blue);color:#fff;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:12px;margin-left:auto}
 
 /* ERROR */
 
@@ -123,9 +128,10 @@ header{background:#fff;padding:0 2rem;display:flex;align-items:center;justify-co
 .consol-cat-amc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.2rem!important}
 @media(max-width:700px){.consol-cat-amc-grid{grid-template-columns:1fr}}
 .consol-box{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.consol-hdr{padding:.75rem 1rem;background:var(--cream);border-bottom:1px solid var(--border);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(15,17,23,.5)}
+.consol-hdr{padding:.8rem 1.1rem;background:linear-gradient(135deg,#1e3a5f,#1e40af);border-bottom:none;font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#fff;display:flex;align-items:center;gap:.5rem;position:relative;overflow:hidden}
+.consol-hdr::after{content:'';position:absolute;top:0;right:0;width:80px;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.06));pointer-events:none}
 .ctbl{width:100%;border-collapse:collapse;font-size:.82rem}
-.ctbl thead th{text-align:left;padding:.5rem .85rem;font-size:.67rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(15,17,23,.38);border-bottom:1px solid var(--border);background:var(--cream)}
+.ctbl thead th{text-align:left;padding:.55rem .85rem;font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(26,39,68,.55);border-bottom:2px solid rgba(37,99,235,.12);background:linear-gradient(135deg,rgba(37,99,235,.06),rgba(37,99,235,.02))}
 .ctbl tbody td{padding:.65rem .85rem;border-bottom:1px solid rgba(15,17,23,.04);vertical-align:middle}
 .ctbl tbody tr:last-child td{border-bottom:none}
 .ctbl tbody tr:hover{background:rgba(37,99,235,.04)}
@@ -253,7 +259,7 @@ header{background:#fff;padding:0 2rem;display:flex;align-items:center;justify-co
       <div class="tag-wrap" id="unwanted-tags"></div>
       <div style="font-size:.74rem;color:rgba(15,17,23,.35);margin-top:.5rem">Added funds will appear as warnings in Advisor Notes if found in portfolio</div>
       <div class="divider"></div>
-      <div class="sec-ttl" style="font-size:.88rem"><span class="dot"></span>Advisor Notes</div>
+      <div class="advisor-section-title" style="font-size:.88rem"><span class="dot"></span><span style="font-family:'Playfair Display',serif;font-weight:700">Advisor Notes</span><span class="alert-count" id="alert-count" style="display:none">0</span></div>
       <div id="alert-list"></div>
     </div>
   </div>
@@ -745,11 +751,28 @@ function renderSidebar(m, isAll) {
   // Goal tracker removed — replaced by scheme search
 
   const icons = { warn: '⚠️', info: 'ℹ️', ok: '✅' };
+  const typeLabels = { warn: 'Warning', info: 'Insight', ok: 'Good' };
+  const typeColors = { warn: '#e05c45', info: '#3b82f6', ok: '#2d8a6e' };
   // Compute smart advisory alerts
   const smartAlerts = computeAdvisoryAlerts(m);
   const allAlerts = [...smartAlerts, ...(m.alerts || [])];
+
+  // Update count badge
+  const countEl = qs('alert-count');
+  if (countEl) {
+    if (allAlerts.length > 0) {
+      countEl.textContent = allAlerts.length;
+      countEl.style.display = 'inline-block';
+      // Color badge based on most severe alert
+      const hasWarn = allAlerts.some(a => a.type === 'warn');
+      countEl.style.background = hasWarn ? '#e05c45' : 'var(--blue)';
+    } else {
+      countEl.style.display = 'none';
+    }
+  }
+
   qs('alert-list').innerHTML = allAlerts.length
-    ? allAlerts.map(a => `<div class="alert-box ${a.type}"><span style="flex-shrink:0">${icons[a.type] || '•'}</span><span>${a.text}</span></div>`).join('')
+    ? allAlerts.map(a => `<div class="alert-box ${a.type}"><span style="flex-shrink:0;font-size:1.1rem">${icons[a.type] || '•'}</span><div style="flex:1"><div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:${typeColors[a.type] || '#666'};margin-bottom:3px">${typeLabels[a.type] || 'Note'}</div><span>${a.text}</span></div></div>`).join('')
     : '<div style="font-size:.8rem;color:rgba(15,17,23,.4);padding:.5rem 0">No alerts</div>';
 }
 
