@@ -1583,9 +1583,6 @@ Return this exact JSON structure:
 
       // Asset Class Mix — always 3 categories: Equity, Debt, Gold
       const rawAm = m.assetMix || {};
-      const eqKeys = ['Equity', 'equity'];
-      const dtKeys = ['Debt', 'debt', 'Liquid', 'liquid'];
-      const goldKeys = ['Gold', 'gold'];
       let eqPct = 0, dtPct = 0, goldPct = 0;
       Object.keys(rawAm).forEach(k => {
         const v = rawAm[k] || 0;
@@ -1600,6 +1597,29 @@ Return this exact JSON structure:
         dtPct = rawAm['Debt'] || 0;
         goldPct = rawAm['Gold'] || 0;
       }
+      
+      // Fallback: Compute from holdings if assetMix wasn't provided
+      if (eqPct === 0 && dtPct === 0 && goldPct === 0 && m.holdings && m.holdings.length > 0) {
+        let totalVal = 0, e = 0, d = 0, g = 0;
+        m.holdings.forEach(h => {
+           let val = h.current || 0;
+           totalVal += val;
+           const cat = (h.cat || '').toLowerCase();
+           const name = (h.name || '').toLowerCase();
+           if (name.includes('gold') || cat.includes('gold') || h.badge === 'go' || h.badge === 'co') {
+              g += val;
+           } else if (name.includes('debt') || name.includes('liquid') || name.includes('arbitrage') || cat.includes('debt') || cat.includes('liquid') || h.badge === 'dt') {
+              d += val;
+           } else {
+              e += val;
+           }
+        });
+        if (totalVal > 0) {
+           eqPct = parseFloat(((e / totalVal) * 100).toFixed(1));
+           dtPct = parseFloat(((d / totalVal) * 100).toFixed(1));
+           goldPct = parseFloat(((g / totalVal) * 100).toFixed(1));
+        }
+      }
       const amLabels = [], amData = [], amColors = [];
       if (eqPct > 0) { amLabels.push('Equity'); amData.push(parseFloat(eqPct.toFixed(1))); amColors.push('#2d8a6e'); }
       if (dtPct > 0) { amLabels.push('Debt'); amData.push(parseFloat(dtPct.toFixed(1))); amColors.push('#3d7abf'); }
@@ -1613,7 +1633,7 @@ Return this exact JSON structure:
 
       // Category Breakdown — use subCategories from PDF's "Mutual Fund Allocation by Sub Category" table
       const subCatData = (currentData.subCategories || []).filter(sc => (sc.allocation || 0) > 0);
-      let ccLabels, ccData;
+      let ccLabels = [], ccData = [];
       if (subCatData.length > 0) {
         ccLabels = subCatData.map(sc => sc.cat);
         ccData = subCatData.map(sc => parseFloat((sc.allocation || 0).toFixed(2)));
@@ -1621,6 +1641,24 @@ Return this exact JSON structure:
         // fallback to categories field if subCategories not available
         const cat = m.categories || {}, cl = Object.keys(cat).filter(k => cat[k] > 0);
         ccLabels = cl; ccData = cl.map(k => cat[k]);
+      }
+      
+      // Secondary Fallback: If both are empty, compute from holdings
+      if (ccLabels.length === 0 && m.holdings && m.holdings.length > 0) {
+        let totalVal = 0;
+        const catMap = {};
+        m.holdings.forEach(h => {
+           let val = h.current || 0;
+           totalVal += val;
+           let c = h.cat || 'Other';
+           if (!c || c === '—') c = 'Other';
+           if (!catMap[c]) catMap[c] = 0;
+           catMap[c] += val;
+        });
+        if (totalVal > 0) {
+           ccLabels = Object.keys(catMap);
+           ccData = ccLabels.map(k => parseFloat(((catMap[k] / totalVal) * 100).toFixed(1)));
+        }
       }
       charts.cc = new Chart(qs('cc'), {
         type: 'doughnut',
