@@ -1239,6 +1239,66 @@
       return neg ? '-' + s : s;
     }
 
+    // ── GLOBAL UTILITY: AMC & CATEGORY DETECTION ──
+    function detectAMC(name) {
+      const n = (name || '').toLowerCase();
+      if (n.includes('sbi')) return 'SBI Mutual Fund';
+      if (n.includes('axis')) return 'Axis Mutual Fund';
+      if (n.includes('icici')) return 'ICICI Prudential MF';
+      if (n.includes('hdfc')) return 'HDFC Mutual Fund';
+      if (n.includes('kotak')) return 'Kotak Mutual Fund';
+      if (n.includes('dsp')) return 'DSP Mutual Fund';
+      if (n.includes('aditya birla') || n.includes('ab sl') || n.includes('absl')) return 'Aditya Birla Sun Life MF';
+      if (n.includes('nippon')) return 'Nippon India MF';
+      if (n.includes('mirae')) return 'Mirae Asset MF';
+      if (n.includes('franklin')) return 'Franklin Templeton MF';
+      if (n.includes('tata')) return 'Tata Mutual Fund';
+      if (n.includes('uti')) return 'UTI Mutual Fund';
+      if (n.includes('pgim')) return 'PGIM India MF';
+      if (n.includes('sundaram')) return 'Sundaram MF';
+      if (n.includes('bandhan')) return 'Bandhan MF';
+      if (n.includes('parag parikh') || n.includes('ppfas')) return 'PPFAS MF';
+      if (n.includes('motilal')) return 'Motilal Oswal MF';
+      if (n.includes('invesco')) return 'Invesco MF';
+      if (n.includes('l&t') || n.includes('l and t')) return 'L&T MF';
+      if (n.includes('canara')) return 'Canara Robeco MF';
+      if (n.includes('edelweiss')) return 'Edelweiss MF';
+      if (n.includes('whiteoak')) return 'WhiteOak MF';
+      if (n.includes('quant')) return 'Quant MF';
+      if (n.includes('jm')) return 'JM Financial MF';
+      if (n.includes('navi')) return 'Navi MF';
+      if (n.includes('360 one') || n.includes('360one')) return '360 ONE MF';
+      if (n.includes('groww')) return 'Groww MF';
+      return 'Other';
+    }
+
+    function detectCategory(name) {
+      const n = (name || '').toLowerCase();
+      if (n.includes('large & mid') || n.includes('large and mid') || n.includes('large & midcap')) return 'Large & Mid Cap';
+      if (n.includes('mid cap') || n.includes('midcap')) return 'Mid Cap';
+      if (n.includes('small cap') || n.includes('smallcap')) return 'Small Cap';
+      if (n.includes('multi cap') || n.includes('multicap')) return 'Multi Cap';
+      if (n.includes('flexi cap') || n.includes('flexicap') || n.includes('flexi-cap')) return 'Flexi Cap';
+      if (n.includes('large cap') || n.includes('largecap')) return 'Large Cap';
+      if (n.includes('elss') || n.includes('tax saver') || n.includes('tax saving') || n.includes('long term equity')) return 'ELSS';
+      if (n.includes('nifty') || n.includes('sensex') || n.includes('index') || n.includes('bse')) return 'Index';
+      if (n.includes('multi asset')) return 'Multi Asset';
+      if (n.includes('balanced advantage') || n.includes('baf')) return 'Balanced Advantage';
+      if (n.includes('hybrid') || n.includes('balanced') || n.includes('conservative hybrid') || n.includes('aggressive hybrid')) return 'Hybrid';
+      if (n.includes('focused')) return 'Focused';
+      if (n.includes('value') || n.includes('contra')) return 'Value/Contra';
+      if (n.includes('liquid') || n.includes('overnight') || n.includes('money market')) return 'Liquid';
+      if (n.includes('arbitrage')) return 'Arbitrage';
+      if (n.includes('dynamic bond') || n.includes('gilt') || n.includes('g-sec')) return 'Dynamic Bond/Gilt';
+      if (n.includes('short duration') || n.includes('short term')) return 'Short Duration';
+      if (n.includes('corporate bond') || n.includes('credit risk')) return 'Corporate Bond';
+      if (n.includes('ultra short') || n.includes('low duration')) return 'Ultra Short/Low Duration';
+      if (n.includes('bond') || n.includes('debt') || n.includes('income') || n.includes('fixed')) return 'Debt';
+      if (n.includes('savings') || n.includes('regular savings')) return 'Savings';
+      if (n.includes('gold') || n.includes('commodity')) return 'Gold/Commodity';
+      return 'Other';
+    }
+
     function setStep(n) {
       for (let i = 1; i <= 4; i++) {
         const el = qs('s' + i); if (!el) continue;
@@ -1753,7 +1813,7 @@ Return this exact JSON structure:
       const typeLabels = { warn: 'Warning', info: 'Insight', ok: 'Good' };
       const typeColors = { warn: '#e05c45', info: '#3b82f6', ok: '#2d8a6e' };
       // Compute smart advisory alerts
-      const smartAlerts = computeAdvisoryAlerts(m);
+      const smartAlerts = computeAdvisoryAlerts(m, isAll);
       const allAlerts = [...smartAlerts, ...(m.alerts || [])];
 
       // Update count badge
@@ -1775,93 +1835,214 @@ Return this exact JSON structure:
         : '<div style="font-size:.8rem;color:rgba(15,17,23,.4);padding:.5rem 0">No alerts</div>';
     }
 
-    function computeAdvisoryAlerts(m) {
+    function computeAdvisoryAlerts(m, isAll) {
       const alerts = [];
       const holdings = m.holdings || [];
       const totalCurrent = holdings.reduce((s, h) => s + (h.current || 0), 0) || 1;
       const subCats = currentData.subCategories || [];
-      const amcData = currentData.amcAllocation || [];
 
-      // ── RULE 1: AMC concentration > 20% ──
-      amcData.forEach(a => {
-        if ((a.allocation || 0) > 20) {
-          alerts.push({ type: 'warn', text: `⚠️ AMC Concentration: ${a.amc} has ${a.allocation.toFixed(1)}% allocation (limit: 20%). Consider spreading across other AMCs to reduce concentration risk.` });
+      // ── DYNAMIC ASSET & CATEGORY CALCULATION ──
+      // Dynamic arrays ensure correctness for individual applicants and combined totals alike
+      const memberAmcMap = {};
+      let midCapPct = 0;
+      let smallCapPct = 0;
+      let flexiCapPct = 0;
+      let largeCapPct = 0;
+      let largeMidCapPct = 0;
+      let multiAssetPct = 0;
+      let goldPct = 0;
+      let eqPct = 0;
+      let dtPct = 0;
+
+      holdings.forEach(h => {
+        const val = h.current || 0;
+        const al = (val / totalCurrent) * 100;
+        const c = (h.cat || '').toLowerCase();
+        const n = (h.name || '').toLowerCase();
+        const amc = detectAMC(h.name);
+
+        // AMC map summation
+        if (!memberAmcMap[amc]) memberAmcMap[amc] = 0;
+        memberAmcMap[amc] += val;
+
+        // Asset Class Mix logic (Equity, Debt, Gold)
+        if (n.includes('gold') || c.includes('gold') || h.badge === 'go' || h.badge === 'co') {
+          goldPct += al;
+        } else if (n.includes('debt') || n.includes('liquid') || n.includes('arbitrage') || c.includes('debt') || c.includes('liquid') || h.badge === 'dt' || h.badge === 'lq') {
+          dtPct += al;
+        } else {
+          eqPct += al; // equity, hybrid, balanced, other go to equity
+        }
+
+        // Subcategory allocation breakdown
+        if (c.includes('large & mid') || c.includes('large and mid') || c.includes('large & midcap')) {
+          largeMidCapPct += al;
+        } else if (c.includes('mid cap') || c.includes('midcap')) {
+          midCapPct += al;
+        } else if (c.includes('small cap') || c.includes('smallcap')) {
+          smallCapPct += al;
+        } else if (c.includes('flexi cap') || c.includes('flexicap') || c.includes('flexi-cap')) {
+          flexiCapPct += al;
+        } else if (c.includes('large cap') || c.includes('largecap')) {
+          largeCapPct += al;
+        } else if (c.includes('multi asset') || c.includes('multi-asset') || n.includes('multi asset') || n.includes('multi-asset')) {
+          multiAssetPct += al;
         }
       });
 
-      // ── RULE 2: Thematic / Sectoral / ELSS schemes ──
-      const specialKeywords = ['thematic', 'sector', 'sectoral', 'banking', 'pharma', 'infra', 'infrastructure', 'technology', 'tech', 'consumption', 'elss', 'tax saver', 'tax saving', 'psu', 'energy', 'defence', 'manufacturing'];
-      const specialFunds = holdings.filter(h => {
-        const n = (h.name || '').toLowerCase();
-        const c = (h.cat || '').toLowerCase();
-        return specialKeywords.some(k => n.includes(k) || c.includes(k));
-      });
-      if (specialFunds.length > 0) {
-        alerts.push({ type: 'info', text: `ℹ️ Special Schemes Detected: ${specialFunds.map(f => f.name.replace(/ Reg \(G\)|\(G\)/g, '')).join(', ')} — Thematic/Sectoral/ELSS funds carry concentration risk. Review if these align with long-term goals.` });
+      const memberAmcAllocations = Object.entries(memberAmcMap).map(([amc, val]) => ({
+        amc,
+        allocation: (val / totalCurrent) * 100
+      })).sort((a, b) => b.allocation - a.allocation);
+
+      // Overwrite with PDF data if All Members tab contains verified tables
+      if (isAll && subCats && subCats.length > 0) {
+        subCats.forEach(sc => {
+          const c = (sc.cat || '').toLowerCase();
+          const pct = sc.allocation || 0;
+          if (c.includes('large & mid') || c.includes('large and mid') || c.includes('large & midcap')) {
+            largeMidCapPct = pct;
+          } else if (c.includes('mid cap') || c.includes('midcap')) {
+            midCapPct = pct;
+          } else if (c.includes('small cap') || c.includes('smallcap')) {
+            smallCapPct = pct;
+          } else if (c.includes('flexi cap') || c.includes('flexicap') || c.includes('flexi-cap')) {
+            flexiCapPct = pct;
+          } else if (c.includes('large cap') || c.includes('largecap')) {
+            largeCapPct = pct;
+          } else if (c.includes('multi asset') || c.includes('multi-asset')) {
+            multiAssetPct = pct;
+          }
+        });
       }
 
-      // ── RULE 3: Equity > 70% or Debt > 30% ──
       const rawAm = m.assetMix || {};
-      let eqPct = 0, dtPct = 0, goldPct = 0;
-      Object.keys(rawAm).forEach(k => {
-        const v = rawAm[k] || 0, kl = k.toLowerCase();
-        if (kl.includes('gold')) goldPct += v;
-        else if (kl.includes('debt') || kl.includes('liquid') || kl.includes('arbitrage')) dtPct += v;
-        else eqPct += v;
+      if (isAll && rawAm['Equity'] !== undefined) {
+        eqPct = rawAm['Equity'] || 0;
+        dtPct = rawAm['Debt'] || 0;
+        goldPct = rawAm['Gold'] || 0;
+      }
+
+      // ── RULE 1: AMC concentration > 20% ──
+      // Dynamic shift suggestions are formulated by querying existing lower-allocated AMCs in client's portfolio
+      const activeAmcs = isAll ? (currentData.amcAllocation || []) : memberAmcAllocations;
+      activeAmcs.forEach(a => {
+        const allocVal = a.allocation || 0;
+        if (allocVal > 20) {
+          const underAllocated = activeAmcs.filter(x => x.amc !== a.amc && x.amc !== 'Other' && (x.allocation || 0) < 10).slice(0, 3).map(x => x.amc);
+          let shiftText = "";
+          if (underAllocated.length > 0) {
+            shiftText = ` Consider shifting the excess allocation to other under-allocated AMCs in the portfolio such as ${underAllocated.join(', ')} to reduce concentration risk.`;
+          } else {
+            shiftText = ` Consider shifting the excess allocation to leading Indian AMCs with lower exposure (e.g., SBI Mutual Fund, HDFC Mutual Fund, or ICICI Prudential MF) to improve diversification.`;
+          }
+          alerts.push({ type: 'warn', text: `⚠️ AMC Concentration Warning: ${a.amc} accounts for ${allocVal.toFixed(1)}% of the portfolio, which exceeds the safe threshold of 20%.${shiftText}` });
+        }
       });
-      if (rawAm['Equity'] !== undefined) { eqPct = rawAm['Equity'] || 0; dtPct = rawAm['Debt'] || 0; goldPct = rawAm['Gold'] || 0; }
-      if (eqPct > 70) alerts.push({ type: 'warn', text: `⚠️ High Equity Exposure: ${eqPct.toFixed(1)}% in Equity (recommended max: 70%). Consider rebalancing into Debt or Gold for stability.` });
-      if (dtPct > 30) alerts.push({ type: 'warn', text: `⚠️ High Debt Exposure: ${dtPct.toFixed(1)}% in Debt (recommended max: 30%). Review if this matches the client's risk profile and investment horizon.` });
+
+      // ── RULE 2: Thematic, Sectoral, or ELSS schemes ──
+      const thematicFunds = [];
+      const elssFunds = [];
+      holdings.forEach(h => {
+        const name = (h.name || '').toLowerCase();
+        const cat = (h.cat || '').toLowerCase();
+        const cleanName = h.name.replace(/ Reg \(G\)|\(G\)/g, '');
+        if (name.includes('elss') || name.includes('tax saver') || name.includes('tax saving') || cat.includes('elss') || cat.includes('tax saver') || cat.includes('tax saving')) {
+          elssFunds.push(cleanName);
+        } else if (['thematic', 'sector', 'sectoral', 'banking', 'pharma', 'infra', 'infrastructure', 'technology', 'tech', 'consumption', 'psu', 'energy', 'defence', 'manufacturing', 'healthcare', 'auto', 'fmcg', 'service'].some(k => name.includes(k) || cat.includes(k))) {
+          thematicFunds.push(cleanName);
+        }
+      });
+      if (thematicFunds.length > 0) {
+        alerts.push({ type: 'info', text: `📌 Thematic/Sectoral Schemes: We detected thematic/sectoral funds (${thematicFunds.join(', ')}). These funds carry high sector-specific concentration risk. Ensure their combined exposure is limited to 10-15% of the total portfolio.` });
+      }
+      if (elssFunds.length > 0) {
+        alerts.push({ type: 'info', text: `📌 ELSS (Tax Saving) Schemes: We detected tax saver funds (${elssFunds.join(', ')}). Remember that ELSS investments have a mandatory 3-year lock-in period from the date of investment.` });
+      }
+
+      // ── RULE 3: Equity > 80% and Debt > 20% ──
+      if (eqPct > 80) {
+        alerts.push({ type: 'warn', text: `⚠️ High Equity Allocation: Equity is ${eqPct.toFixed(1)}% of the portfolio, which is above the 80% threshold. This high equity exposure increases volatility. Consider rebalancing some profits into debt or gold to cushion against market corrections.` });
+      }
+      if (dtPct > 20) {
+        alerts.push({ type: 'info', text: `ℹ️ Elevated Debt Allocation: Debt is ${dtPct.toFixed(1)}% of the portfolio, which is above the 20% threshold. While debt provides safety, excessive debt for a long-term goal might lower overall portfolio returns. Ensure this matches the client's asset allocation strategy.` });
+      }
 
       // ── RULE 4: Single scheme > 10% allocation ──
       holdings.forEach(h => {
         const al = (h.current || 0) / totalCurrent * 100;
         if (al > 10) {
-          alerts.push({ type: 'warn', text: `⚠️ Scheme Concentration: ${(h.name || '').replace(/ Reg \(G\)|\(G\)/g, '')} has ${al.toFixed(1)}% allocation (limit: 10%). Reduce to avoid over-exposure to a single scheme.` });
+          alerts.push({ type: 'warn', text: `⚠️ Scheme Concentration: ${(h.name || '').replace(/ Reg \(G\)|\(G\)/g, '')} accounts for ${al.toFixed(1)}% of the total portfolio, exceeding the safe limit of 10%. Consider trimming this scheme and distributing the funds to reduce single-fund risk.` });
         }
       });
 
       // ── RULE 5: Category allocation vs ideal ranges ──
-      const idealRanges = {
-        'mid cap': { min: 25, max: 30, label: 'Mid Cap' },
-        'small cap': { min: 15, max: 20, label: 'Small Cap' },
-        'flexi cap': { min: 30, max: 35, label: 'Flexi Cap' },
-        'large cap': { min: 20, max: 30, label: 'Large Cap + Large & Mid Cap', combined: true },
-        'large & mid': { skip: true },
-      };
-      let largeMidPct = 0;
-      subCats.forEach(sc => {
-        const cl = (sc.cat || '').toLowerCase();
-        const pct = sc.allocation || 0;
-        if (cl.includes('large & mid') || cl.includes('large and mid')) largeMidPct += pct;
-        Object.keys(idealRanges).forEach(key => {
-          const rule = idealRanges[key];
-          if (rule.skip || rule.combined) return;
-          if (cl.includes(key)) {
-            if (pct < rule.min) alerts.push({ type: 'info', text: `📊 Category Alert: ${rule.label} is at ${pct.toFixed(1)}% — below ideal range of ${rule.min}–${rule.max}%. Consider increasing allocation.` });
-            else if (pct > rule.max) alerts.push({ type: 'warn', text: `⚠️ Category Alert: ${rule.label} is at ${pct.toFixed(1)}% — above ideal range of ${rule.min}–${rule.max}%. Consider reducing allocation.` });
-          }
-        });
-      });
-      // Large Cap combined check
-      const largePct = (subCats.find(sc => (sc.cat || '').toLowerCase().includes('large cap') && !(sc.cat || '').toLowerCase().includes('mid')) || {}).allocation || 0;
-      const totalLargePct = largePct + largeMidPct;
-      if (totalLargePct > 0) {
-        if (totalLargePct < 20) alerts.push({ type: 'info', text: `📊 Category Alert: Large Cap + Large & Mid Cap combined is ${totalLargePct.toFixed(1)}% — below ideal range of 20–30%. Consider adding stability with large cap exposure.` });
-        else if (totalLargePct > 30) alerts.push({ type: 'warn', text: `⚠️ Category Alert: Large Cap + Large & Mid Cap combined is ${totalLargePct.toFixed(1)}% — above ideal range of 20–30%. Portfolio may be too conservative on the large cap side.` });
+      // Mid cap ideal range: 25% to 30%
+      if (midCapPct > 0) {
+        if (midCapPct < 25) {
+          alerts.push({ type: 'info', text: `📊 Category Deviation: Mid Cap is at ${midCapPct.toFixed(1)}% — below the ideal range of 25%–30%. Consider increasing allocation to capture mid-sized company growth.` });
+        } else if (midCapPct > 30) {
+          alerts.push({ type: 'warn', text: `⚠️ Category Over-exposure: Mid Cap is at ${midCapPct.toFixed(1)}% — above the ideal range of 25%–30%. Consider booking profits and rebalancing.` });
+        }
+      } else {
+        alerts.push({ type: 'info', text: `📊 Category Deviation: Mid Cap is at 0.0% — below the ideal range of 25%–30%. Consider adding mid-cap funds to capture mid-sized company growth.` });
+      }
+
+      // Small cap ideal range: 15% to 20%
+      if (smallCapPct > 0) {
+        if (smallCapPct < 15) {
+          alerts.push({ type: 'info', text: `📊 Category Deviation: Small Cap is at ${smallCapPct.toFixed(1)}% — below the ideal range of 15%–20%. Consider increasing allocation if risk profile permits high volatility.` });
+        } else if (smallCapPct > 20) {
+          alerts.push({ type: 'warn', text: `⚠️ Category Over-exposure: Small Cap is at ${smallCapPct.toFixed(1)}% — above the ideal range of 15%–20%. Small-cap stocks are highly volatile; consider trimming this exposure.` });
+        }
+      } else {
+        alerts.push({ type: 'info', text: `📊 Category Deviation: Small Cap is at 0.0% — below the ideal range of 15%–20%. Consider adding small-cap funds if risk profile permits high volatility.` });
+      }
+
+      // Flexi cap ideal range: 20% to 25%
+      if (flexiCapPct > 0) {
+        if (flexiCapPct < 20) {
+          alerts.push({ type: 'info', text: `📊 Category Deviation: Flexi Cap is at ${flexiCapPct.toFixed(1)}% — below the ideal range of 20%–25%. Consider adding Flexi Cap funds for dynamic go-anywhere market cap exposure.` });
+        } else if (flexiCapPct > 25) {
+          alerts.push({ type: 'warn', text: `⚠️ Category Over-exposure: Flexi Cap is at ${flexiCapPct.toFixed(1)}% — above the ideal range of 20%–25%.` });
+        }
+      } else {
+        alerts.push({ type: 'info', text: `📊 Category Deviation: Flexi Cap is at 0.0% — below the ideal range of 20%–25%. Consider adding Flexi Cap funds for dynamic market cap exposure.` });
+      }
+
+      // Large cap and Large & Mid cap (combined) ideal range: 30% to 35%
+      const combinedLargePct = largeCapPct + largeMidCapPct;
+      if (combinedLargePct > 0) {
+        if (combinedLargePct < 30) {
+          alerts.push({ type: 'info', text: `📊 Category Deviation: Large Cap + Large & Mid Cap combined is ${combinedLargePct.toFixed(1)}% — below the ideal range of 30%–35%. Consider increasing allocation to add stability and steady growth.` });
+        } else if (combinedLargePct > 35) {
+          alerts.push({ type: 'warn', text: `⚠️ Category Over-exposure: Large Cap + Large & Mid Cap combined is ${combinedLargePct.toFixed(1)}% — above the ideal range of 30%–35%. Portfolio might be overly conservative; consider reallocating to mid or small caps for growth.` });
+        }
+      } else {
+        alerts.push({ type: 'info', text: `📊 Category Deviation: Large Cap + Large & Mid Cap combined is at 0.0% — below the ideal range of 30%–35%. Consider adding large-cap exposure to add stability and steady growth.` });
+      }
+
+      // Multi asset ideal allocation: 10% (tolerance range 8% to 12% is checked)
+      if (multiAssetPct > 0) {
+        if (multiAssetPct < 8 || multiAssetPct > 12) {
+          alerts.push({ type: 'info', text: `📊 Category Deviation: Multi Asset is at ${multiAssetPct.toFixed(1)}% — deviating from the ideal allocation of 10%. Multi-asset funds provide excellent asset diversification.` });
+        }
+      } else {
+        alerts.push({ type: 'info', text: `📊 Category Deviation: Multi Asset is at 0.0% — below the ideal allocation of 10%. Consider adding multi-asset funds for stable asset diversification.` });
       }
 
       // ── RULE 6: No Gold in portfolio ──
-      const hasGold = goldPct > 0 || subCats.some(sc => (sc.cat || '').toLowerCase().includes('gold')) || holdings.some(h => (h.name || '').toLowerCase().includes('gold') || (h.cat || '').toLowerCase().includes('gold'));
-      if (!hasGold) alerts.push({ type: 'info', text: `💡 Gold Missing: No gold allocation found in this portfolio. Consider adding 5–10% in Gold ETF or Sovereign Gold Bonds for inflation hedging and diversification.` });
+      if (goldPct === 0) {
+        alerts.push({ type: 'info', text: `💡 Gold Missing: No gold allocation found in this portfolio. Consider adding 5–10% in Gold ETF or Sovereign Gold Bonds for inflation hedging and diversification.` });
+      }
 
-      // ── RULE 7: IDCW schemes in portfolio ──
+      // ── TAX OPTIMIZATION: IDCW schemes (dividend option) ──
       const idcwFunds = holdings.filter(h => (h.name || '').toUpperCase().includes('IDCW'));
       if (idcwFunds.length > 0) {
         alerts.push({ type: 'warn', text: `⚠️ IDCW Schemes Detected: ${idcwFunds.map(f => f.name.replace(/ Reg \(G\)/g, '').replace(/\(G\)/g, '')).join(', ')} — IDCW (dividend) option creates tax liability on payouts. Consider switching to Growth option for better long-term compounding.` });
       }
 
-      // ── RULE 8: Unwanted schemes in portfolio ──
+      // ── CONFLICTING/UNWANTED SCHEMES ──
       if (unwantedSchemes && unwantedSchemes.length > 0) {
         unwantedSchemes.forEach(unwanted => {
           const matched = holdings.filter(h =>
@@ -2031,65 +2212,7 @@ Return this exact JSON structure:
       </table>
     </div>`;
 
-      // ── AMC & CATEGORY detection from fund name ──
-      function detectAMC(name) {
-        const n = (name || '').toLowerCase();
-        if (n.includes('sbi')) return 'SBI Mutual Fund';
-        if (n.includes('axis')) return 'Axis Mutual Fund';
-        if (n.includes('icici')) return 'ICICI Prudential MF';
-        if (n.includes('hdfc')) return 'HDFC Mutual Fund';
-        if (n.includes('kotak')) return 'Kotak Mutual Fund';
-        if (n.includes('dsp')) return 'DSP Mutual Fund';
-        if (n.includes('aditya birla') || n.includes('ab sl') || n.includes('absl')) return 'Aditya Birla Sun Life MF';
-        if (n.includes('nippon')) return 'Nippon India MF';
-        if (n.includes('mirae')) return 'Mirae Asset MF';
-        if (n.includes('franklin')) return 'Franklin Templeton MF';
-        if (n.includes('tata')) return 'Tata Mutual Fund';
-        if (n.includes('uti')) return 'UTI Mutual Fund';
-        if (n.includes('pgim')) return 'PGIM India MF';
-        if (n.includes('sundaram')) return 'Sundaram MF';
-        if (n.includes('bandhan')) return 'Bandhan MF';
-        if (n.includes('parag parikh') || n.includes('ppfas')) return 'PPFAS MF';
-        if (n.includes('motilal')) return 'Motilal Oswal MF';
-        if (n.includes('invesco')) return 'Invesco MF';
-        if (n.includes('l&t') || n.includes('l and t')) return 'L&T MF';
-        if (n.includes('canara')) return 'Canara Robeco MF';
-        if (n.includes('edelweiss')) return 'Edelweiss MF';
-        if (n.includes('whiteoak')) return 'WhiteOak MF';
-        if (n.includes('quant')) return 'Quant MF';
-        if (n.includes('jm')) return 'JM Financial MF';
-        if (n.includes('navi')) return 'Navi MF';
-        if (n.includes('360 one') || n.includes('360one')) return '360 ONE MF';
-        if (n.includes('groww')) return 'Groww MF';
-        return 'Other';
-      }
-
-      function detectCategory(name) {
-        const n = (name || '').toLowerCase();
-        if (n.includes('large & mid') || n.includes('large and mid') || n.includes('large & midcap')) return 'Large & Mid Cap';
-        if (n.includes('mid cap') || n.includes('midcap')) return 'Mid Cap';
-        if (n.includes('small cap') || n.includes('smallcap')) return 'Small Cap';
-        if (n.includes('multi cap') || n.includes('multicap')) return 'Multi Cap';
-        if (n.includes('flexi cap') || n.includes('flexicap') || n.includes('flexi-cap')) return 'Flexi Cap';
-        if (n.includes('large cap') || n.includes('largecap')) return 'Large Cap';
-        if (n.includes('elss') || n.includes('tax saver') || n.includes('tax saving') || n.includes('long term equity')) return 'ELSS';
-        if (n.includes('nifty') || n.includes('sensex') || n.includes('index') || n.includes('bse')) return 'Index';
-        if (n.includes('multi asset')) return 'Multi Asset';
-        if (n.includes('balanced advantage') || n.includes('baf')) return 'Balanced Advantage';
-        if (n.includes('hybrid') || n.includes('balanced') || n.includes('conservative hybrid') || n.includes('aggressive hybrid')) return 'Hybrid';
-        if (n.includes('focused')) return 'Focused';
-        if (n.includes('value') || n.includes('contra')) return 'Value/Contra';
-        if (n.includes('liquid') || n.includes('overnight') || n.includes('money market')) return 'Liquid';
-        if (n.includes('arbitrage')) return 'Arbitrage';
-        if (n.includes('dynamic bond') || n.includes('gilt') || n.includes('g-sec')) return 'Dynamic Bond/Gilt';
-        if (n.includes('short duration') || n.includes('short term')) return 'Short Duration';
-        if (n.includes('corporate bond') || n.includes('credit risk')) return 'Corporate Bond';
-        if (n.includes('ultra short') || n.includes('low duration')) return 'Ultra Short/Low Duration';
-        if (n.includes('bond') || n.includes('debt') || n.includes('income') || n.includes('fixed')) return 'Debt';
-        if (n.includes('savings') || n.includes('regular savings')) return 'Savings';
-        if (n.includes('gold') || n.includes('commodity')) return 'Gold/Commodity';
-        return 'Other';
-      }
+      // detectAMC and detectCategory moved to global scope to support calling from computeAdvisoryAlerts.
 
       // ── SECTION 2: Category Wise SIP ──
       const catSipMap = {};
