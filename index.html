@@ -1780,9 +1780,9 @@ Return this exact JSON structure:
       const grouped = {};
       
       rawHoldings.forEach(h => {
-        let cleanName = (h.name || 'Unknown').trim();
-        cleanName = cleanName.replace(/\s*\[.*?\]\s*$/, '').trim();
-        const key = cleanName.toLowerCase();
+        const rawName = (h.name || 'Unknown').trim();
+        const cleanName = rawName.replace(/\s*\[.*?\]\s*$/, '').trim();
+        const key = rawName.toLowerCase();
         
         if (!grouped[key]) {
           grouped[key] = { ...h, name: cleanName };
