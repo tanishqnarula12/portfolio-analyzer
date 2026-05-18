@@ -1560,7 +1560,14 @@ Return this exact JSON structure:
     // DASHBOARD BUILD
     function buildDashboard(data) {
       currentData = data;
-      qs('p-title').textContent = data.title || 'Portfolio Dashboard';
+      
+      function toTitleCase(str) {
+        if (!str) return '';
+        if (str.toLowerCase() === 'all members') return 'All Members';
+        return str.toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      }
+      
+      qs('p-title').textContent = toTitleCase(data.title || 'Portfolio Dashboard');
       qs('p-meta').textContent = data.meta || '';
 
       // Find earliest investment start date across all holdings
@@ -1589,7 +1596,7 @@ Return this exact JSON structure:
       data.members.forEach((m, i) => {
         const t = document.createElement('div');
         t.className = 'tab' + (i === 0 ? ' on' : '');
-        t.innerHTML = `<div class="av">${m.initials || '?'}</div>${m.name}${i === 0 ? startBadge : ''}`;
+        t.innerHTML = `<div class="av">${m.initials || '?'}</div>${toTitleCase(m.name)}${i === 0 ? startBadge : ''}`;
         t.onclick = () => switchMember(i);
         te.appendChild(t);
       });
@@ -1773,9 +1780,12 @@ Return this exact JSON structure:
       const grouped = {};
       
       rawHoldings.forEach(h => {
-        const key = (h.name || 'Unknown').trim().toLowerCase();
+        let cleanName = (h.name || 'Unknown').trim();
+        cleanName = cleanName.replace(/\s*\[.*?\]\s*$/, '').trim();
+        const key = cleanName.toLowerCase();
+        
         if (!grouped[key]) {
-          grouped[key] = { ...h };
+          grouped[key] = { ...h, name: cleanName };
         } else {
           const cur1 = grouped[key].current || 0;
           const cur2 = h.current || 0;
