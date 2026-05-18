@@ -1230,7 +1230,7 @@
 
     function fmt(n) {
       if (n === undefined || n === null || isNaN(n)) return '₹0';
-      n = Number(n);
+      n = Math.round(Number(n));
       const neg = n < 0; if (neg) n = -n;
       let s;
       if (n >= 1e7) s = '₹' + (n / 1e7).toFixed(2) + ' Cr';
@@ -1769,7 +1769,40 @@ Return this exact JSON structure:
     }
 
     function renderTable(m) {
-      const holdings = m.holdings || [], total = holdings.reduce((s, h) => s + (h.current || 0), 0) || 1;
+      const rawHoldings = m.holdings || [];
+      const grouped = {};
+      
+      rawHoldings.forEach(h => {
+        const key = (h.name || 'Unknown').trim().toLowerCase();
+        if (!grouped[key]) {
+          grouped[key] = { ...h };
+        } else {
+          const cur1 = grouped[key].current || 0;
+          const cur2 = h.current || 0;
+          const totCur = cur1 + cur2;
+          
+          let newXirr = 0;
+          if (totCur > 0) {
+            newXirr = ((grouped[key].xirr || 0) * (cur1 / totCur)) + ((h.xirr || 0) * (cur2 / totCur));
+          }
+          
+          grouped[key].invested = (grouped[key].invested || 0) + (h.invested || 0);
+          grouped[key].current = totCur;
+          grouped[key].xirr = newXirr;
+          
+          if (h.holder && grouped[key].holder && !grouped[key].holder.includes(h.holder)) {
+            grouped[key].holder += ', ' + h.holder;
+          } else if (h.holder && !grouped[key].holder) {
+            grouped[key].holder = h.holder;
+          }
+        }
+      });
+      
+      const holdings = Object.values(grouped);
+      holdings.sort((a, b) => (b.current || 0) - (a.current || 0));
+      
+      const total = holdings.reduce((s, h) => s + (h.current || 0), 0) || 1;
+      
       qs('t-body').innerHTML = holdings.map(h => {
         const g = (h.current || 0) - (h.invested || 0);
         const gp = h.invested ? (g / h.invested * 100).toFixed(1) : '0.0';
