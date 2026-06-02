@@ -10,6 +10,96 @@
     rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
   <style>
+    /* ── PRINT STYLES ── */
+    @media print {
+      @page {
+        size: landscape;
+        margin: 10mm;
+      }
+      body {
+        background: #fff !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+      header, #upload-page, .dash-btns, .tabs, .print-btn-wrap,
+      .rcol, #scheme-search, #search-results,
+      .unwanted-input-row, #unwanted-tags,
+      .gauge-wrap, .risk-lbl, .risk-sc, .risk-desc,
+      #btn-new, .browse-btn, .prog-wrap, .steps, .err-box {
+        display: none !important;
+      }
+      #dash-page { display: block !important; }
+      .main-grid {
+        display: block !important;
+        grid-template-columns: 1fr !important;
+      }
+      .lcol {
+        border-right: none !important;
+        padding: 0.5rem !important;
+      }
+      .kpi-row {
+        display: grid !important;
+        grid-template-columns: repeat(5, 1fr) !important;
+      }
+      .chart-row {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+      }
+      .consol-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+      }
+      .print-advisory-section {
+        display: block !important;
+        page-break-before: always;
+        margin-top: 1rem;
+      }
+      .print-advisory-section .alert-box {
+        break-inside: avoid;
+      }
+      canvas {
+        max-height: 160px !important;
+      }
+      .tbl, .ctbl {
+        font-size: .72rem !important;
+      }
+      .tbl thead th, .ctbl thead th {
+        font-size: .62rem !important;
+        padding: .4rem .5rem !important;
+      }
+      .tbl tbody td, .ctbl tbody td {
+        padding: .4rem .5rem !important;
+      }
+    }
+    .print-advisory-section {
+      display: none;
+    }
+    .print-btn-wrap {
+      display: inline-flex;
+    }
+    .print-btn {
+      background: linear-gradient(135deg, #1e3a5f, #1e40af);
+      color: #fff;
+      border: none;
+      padding: .5rem 1.2rem;
+      border-radius: 8px;
+      font: 600 .8rem 'DM Sans', sans-serif;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      transition: .2s;
+      box-shadow: 0 2px 8px rgba(30,64,175,.2);
+    }
+    .print-btn:hover {
+      background: linear-gradient(135deg, #1e40af, #2563eb);
+      box-shadow: 0 4px 14px rgba(30,64,175,.3);
+      transform: translateY(-1px);
+    }
+    .print-btn svg {
+      width: 16px; height: 16px;
+    }
     :root {
       --ink: #1a2744;
       --paper: #f5f8fc;
@@ -53,6 +143,13 @@
       z-index: 100;
       border-bottom: 1px solid var(--border);
       box-shadow: 0 1px 4px rgba(26, 39, 68, .06)
+    }
+
+    @media(max-width:600px) {
+      header {
+        padding: 0 1rem;
+        height: 50px;
+      }
     }
 
     .logo {
@@ -285,6 +382,12 @@
       border-bottom: 1px solid var(--border)
     }
 
+    @media(max-width:600px) {
+      .dash-hdr {
+        padding: 1rem 1rem;
+      }
+    }
+
     .dash-top {
       display: flex;
       align-items: flex-start;
@@ -299,11 +402,23 @@
       font-weight: 700
     }
 
+    @media(max-width:600px) {
+      .client-name {
+        font-size: 1.2rem;
+      }
+    }
+
     .client-meta {
       font-size: .78rem;
       color: rgba(26, 39, 68, .5);
       margin-top: .25rem;
       font-family: 'DM Mono', monospace
+    }
+
+    @media(max-width:600px) {
+      .client-meta {
+        font-size: .68rem;
+      }
     }
 
     .dash-btns {
@@ -396,6 +511,18 @@
       border-bottom: 1px solid var(--border)
     }
 
+    @media(max-width:600px) {
+      .kpi-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media(max-width:380px) {
+      .kpi-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .kpi {
       background: var(--paper);
       padding: 1.2rem 1.5rem;
@@ -477,6 +604,15 @@
       }
     }
 
+    @media(max-width:600px) {
+      .lcol {
+        padding: 1rem !important;
+      }
+      .rcol {
+        padding: 1rem !important;
+      }
+    }
+
     .lcol {
       padding: 1.75rem 2rem;
       border-right: 1px solid var(--border)
@@ -555,6 +691,19 @@
       width: 100%;
       border-collapse: collapse;
       font-size: .82rem
+    }
+
+    @media(max-width:600px) {
+      .tbl {
+        font-size: .72rem;
+      }
+      .tbl thead th {
+        font-size: .6rem !important;
+        padding: .45rem .4rem !important;
+      }
+      .tbl tbody td {
+        padding: .5rem .4rem !important;
+      }
     }
 
     .tbl thead th {
@@ -843,6 +992,24 @@
 
     /* ERROR */
 
+    /* EDITABLE ADVISORY NOTES */
+    .alert-box [contenteditable="true"] {
+      outline: none;
+      border-bottom: 1px dashed transparent;
+      transition: border-color .2s;
+      min-height: 1em;
+    }
+    .alert-box [contenteditable="true"]:hover {
+      border-bottom-color: rgba(0,0,0,.15);
+    }
+    .alert-box [contenteditable="true"]:focus {
+      border-bottom-color: var(--blue);
+      background: rgba(37,99,235,.03);
+      border-radius: 3px;
+      padding: 2px 4px;
+      margin: -2px -4px;
+    }
+
     /* CONSOLIDATED OVERVIEW */
     .consol-wrap {
       margin-bottom: 1.5rem
@@ -1090,7 +1257,15 @@
 
   <header>
     <div class="logo">Team Fintness <span>Portfolio Review</span></div>
-    <div class="badge-h">MFD Dashboard</div>
+    <div style="display:flex;align-items:center;gap:.6rem">
+      <div class="badge-h">MFD Dashboard</div>
+      <div class="print-btn-wrap" id="print-btn-wrap" style="display:none">
+        <button class="print-btn" onclick="printPortfolio()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          Print
+        </button>
+      </div>
+    </div>
   </header>
 
   <!-- UPLOAD PAGE -->
@@ -1143,7 +1318,6 @@
         </div>
         <div class="dash-btns">
           <button class="btn-ol" id="btn-new">↑ New Client</button>
-          <button class="btn-gold" onclick="window.print()">⬇ Export</button>
         </div>
       </div>
       <div class="tabs" id="tabs-el"></div>
@@ -1222,7 +1396,13 @@
         <div id="alert-list"></div>
       </div>
     </div>
-  </div>
+    <!-- Print-only advisory notes section (rendered at end of page for print) -->
+    <div class="print-advisory-section" id="print-advisory-section">
+      <div class="sec-ttl"><span class="dot"></span>Advisory Notes</div>
+      <div id="print-alert-list"></div>
+    </div>
+    </div>
+
 
   <script>
     const qs = id => document.getElementById(id);
@@ -1235,6 +1415,7 @@
       let s;
       if (n >= 1e7) s = '₹' + (n / 1e7).toFixed(2) + ' Cr';
       else if (n >= 1e5) s = '₹' + (n / 1e5).toFixed(2) + 'L';
+      else if (n >= 1e3) s = '₹' + (n / 1e3).toFixed(n % 1e3 === 0 ? 0 : 1) + 'K';
       else s = '₹' + n.toLocaleString('en-IN');
       return neg ? '-' + s : s;
     }
@@ -1605,6 +1786,8 @@ Return this exact JSON structure:
       qs('upload-page').style.display = 'none';
       qs('dash-page').style.display = 'block';
       qs('dash-page').classList.add('fadein');
+      // Show print button
+      qs('print-btn-wrap').style.display = 'inline-flex';
     }
 
     function switchMember(idx) {
@@ -1628,7 +1811,13 @@ Return this exact JSON structure:
       if (isAllMember && currentData.sipSummary && currentData.sipSummary.length > 0) {
         computedSipTotal = currentData.sipSummary.reduce((sum, s) => sum + (s.amount || 0), 0);
       }
-      const sipL = computedSipTotal ? (computedSipTotal / 100000).toFixed(2).replace(/\.?0+$/, '') + 'L' : '—';
+      let sipL = '—';
+      if (computedSipTotal) {
+        if (computedSipTotal >= 1e7) sipL = (computedSipTotal / 1e7).toFixed(2) + ' Cr';
+        else if (computedSipTotal >= 1e5) sipL = (computedSipTotal / 1e5).toFixed(2).replace(/\.?0+$/, '') + 'L';
+        else if (computedSipTotal >= 1e3) sipL = (computedSipTotal / 1e3).toFixed(computedSipTotal % 1e3 === 0 ? 0 : 1) + 'K';
+        else sipL = computedSipTotal.toString();
+      }
       const sipSub = computedSipTotal ? ((m.sips || []).length + ' mandates · 3rd Month') : 'No active SIP';
       qs('kpi-row').innerHTML =
         kpiCard(0, 'Total Invested', fmt(s.invested), (m.holdings || []).length + ' schemes', 'neu') +
@@ -1874,7 +2063,12 @@ Return this exact JSON structure:
       }
 
       qs('alert-list').innerHTML = allAlerts.length
-        ? allAlerts.map(a => `<div class="alert-box ${a.type}"><span style="flex-shrink:0;font-size:1.1rem">${icons[a.type] || '•'}</span><div style="flex:1"><div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:${typeColors[a.type] || '#666'};margin-bottom:3px">${typeLabels[a.type] || 'Note'}</div><span>${a.text}</span></div></div>`).join('')
+        ? allAlerts.map(a => `<div class="alert-box ${a.type}"><span style="flex-shrink:0;font-size:1.1rem">${icons[a.type] || '•'}</span><div style="flex:1"><div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:${typeColors[a.type] || '#666'};margin-bottom:3px">${typeLabels[a.type] || 'Note'}</div><span contenteditable="true" style="display:block;cursor:text">${a.text}</span></div></div>`).join('')
+        : '<div style="font-size:.8rem;color:rgba(15,17,23,.4);padding:.5rem 0">No alerts</div>';
+
+      // Also update print advisory section
+      qs('print-alert-list').innerHTML = allAlerts.length
+        ? allAlerts.map(a => `<div class="alert-box ${a.type}" style="margin-bottom:.5rem"><span style="flex-shrink:0;font-size:1.1rem">${icons[a.type] || '•'}</span><div style="flex:1"><div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:${typeColors[a.type] || '#666'};margin-bottom:3px">${typeLabels[a.type] || 'Note'}</div><span>${a.text}</span></div></div>`).join('')
         : '<div style="font-size:.8rem;color:rgba(15,17,23,.4);padding:.5rem 0">No alerts</div>';
     }
 
@@ -2536,8 +2730,30 @@ Return this exact JSON structure:
       qs('pw').style.display = 'none';
       qs('steps-el').style.display = 'none';
       qs('pf').style.width = '0%';
+      qs('print-btn-wrap').style.display = 'none';
       hideErr();
     });
+
+    // PRINT FUNCTION
+    function printPortfolio() {
+      if (!currentData) return;
+      // Sync editable advisory notes from sidebar to print section
+      const sidebarAlerts = qs('alert-list').querySelectorAll('.alert-box');
+      const printList = qs('print-alert-list');
+      printList.innerHTML = '';
+      sidebarAlerts.forEach(a => {
+        const clone = a.cloneNode(true);
+        // Remove contenteditable for print
+        clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+        printList.appendChild(clone);
+      });
+      // Set document title for PDF filename
+      const clientName = (currentData.title || 'Client').replace(/[^a-zA-Z0-9\s]/g, '').trim().replace(/\s+/g, '_');
+      const origTitle = document.title;
+      document.title = 'portfolio_review_' + clientName;
+      window.print();
+      document.title = origTitle;
+    }
   </script>
 </body>
 
