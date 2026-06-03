@@ -14,7 +14,7 @@
     @media print {
       @page {
         size: landscape;
-        margin: 8mm 10mm;
+        margin: 12mm 10mm;
       }
       * {
         -webkit-print-color-adjust: exact !important;
@@ -258,8 +258,9 @@
       .print-advisory-section {
         display: block !important;
         page-break-before: auto !important;
-        margin-top: 1.5rem !important;
-        padding: .5rem 0 !important;
+        margin-top: 2rem !important;
+        padding-top: 1rem !important;
+        padding-bottom: .5rem !important;
         max-width: 800px !important;
         margin-left: auto !important;
         margin-right: auto !important;
@@ -269,11 +270,13 @@
         margin-bottom: .6rem !important;
         border-bottom: 2px solid #1e40af;
         padding-bottom: .3rem;
+        break-after: avoid !important;
+        page-break-after: avoid !important;
       }
       .print-advisory-section .alert-box {
-        break-inside: avoid;
-        page-break-inside: avoid;
-        margin-bottom: .4rem !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        margin-bottom: .5rem !important;
         padding: .5rem .6rem !important;
         font-size: 8.5pt !important;
         border-radius: 5px !important;
