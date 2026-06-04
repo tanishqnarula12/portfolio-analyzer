@@ -14,7 +14,10 @@
     @media print {
       @page {
         size: landscape;
-        margin: 12mm 10mm;
+        margin: 20mm 10mm 15mm 10mm;
+      }
+      @page :first {
+        margin-top: 12mm;
       }
       * {
         -webkit-print-color-adjust: exact !important;
@@ -272,6 +275,11 @@
         padding-bottom: .3rem;
         break-after: avoid !important;
         page-break-after: avoid !important;
+      }
+      .alert-box-wrap {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        display: block !important;
       }
       .print-advisory-section .alert-box {
         break-inside: avoid !important;
@@ -2313,12 +2321,12 @@ Return this exact JSON structure:
       }
 
       qs('alert-list').innerHTML = allAlerts.length
-        ? allAlerts.map((a, i) => `<div class="alert-box ${a.type}"><span style="flex-shrink:0;font-size:1.1rem">${icons[a.type] || '•'}</span><div style="flex:1"><div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:${typeColors[a.type] || '#666'};margin-bottom:3px">${typeLabels[a.type] || 'Note'}</div><div class="alert-editable" contenteditable="true" data-alert-idx="${i}">${a.text}</div><div class="alert-edit-hint">✏️ Click to edit this note</div></div></div>`).join('')
+        ? allAlerts.map((a, i) => `<div class="alert-box-wrap"><div class="alert-box ${a.type}"><span style="flex-shrink:0;font-size:1.1rem">${icons[a.type] || '•'}</span><div style="flex:1"><div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:${typeColors[a.type] || '#666'};margin-bottom:3px">${typeLabels[a.type] || 'Note'}</div><div class="alert-editable" contenteditable="true" data-alert-idx="${i}">${a.text}</div><div class="alert-edit-hint">✏️ Click to edit this note</div></div></div></div>`).join('')
         : '<div style="font-size:.8rem;color:rgba(15,17,23,.4);padding:.5rem 0">No alerts</div>';
 
       // Also update print advisory section (will be re-synced on print)
       qs('print-alert-list').innerHTML = allAlerts.length
-        ? allAlerts.map(a => `<div class="alert-box ${a.type}" style="margin-bottom:.5rem"><span style="flex-shrink:0;font-size:1.1rem">${icons[a.type] || '•'}</span><div style="flex:1"><div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:${typeColors[a.type] || '#666'};margin-bottom:3px">${typeLabels[a.type] || 'Note'}</div><span>${a.text}</span></div></div>`).join('')
+        ? allAlerts.map(a => `<div class="alert-box-wrap"><div class="alert-box ${a.type}" style="margin-bottom:.5rem"><span style="flex-shrink:0;font-size:1.1rem">${icons[a.type] || '•'}</span><div style="flex:1"><div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:${typeColors[a.type] || '#666'};margin-bottom:3px">${typeLabels[a.type] || 'Note'}</div><span>${a.text}</span></div></div></div>`).join('')
         : '<div style="font-size:.8rem;color:rgba(15,17,23,.4);padding:.5rem 0">No alerts</div>';
     }
 
@@ -2988,7 +2996,7 @@ Return this exact JSON structure:
     function printPortfolio() {
       if (!currentData) return;
       // Sync editable advisory notes from sidebar to print section
-      const sidebarAlerts = qs('alert-list').querySelectorAll('.alert-box');
+      const sidebarAlerts = qs('alert-list').querySelectorAll('.alert-box-wrap');
       const printList = qs('print-alert-list');
       printList.innerHTML = '';
       sidebarAlerts.forEach(a => {
